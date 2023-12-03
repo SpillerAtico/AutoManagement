@@ -33,7 +33,7 @@ def get_table_1(option: int):
 
 
 def get_table_2(option: int):
-    workbook.active = workbook[sheets[7]]  # Приложение 8, теперь взаимодействуем с полученными корабликами
+    workbook.active = workbook[sheets[8]]  # Приложение 8, теперь взаимодействуем с полученными корабликами
     sheet = workbook.active
 
     your_ships = options.your_ships(option)
@@ -57,42 +57,25 @@ def get_table_2(option: int):
 def get_table_3(option: int):
     workbook.active = workbook[sheets[1]]  # Приложение 2
     sheet = workbook.active
-
-    your_ships = options.your_ships(option)
-    ship_cells = options.get_ships_table_2(your_ships, sheet)
-
-    type_ship = list(options.get_attachments_2(ship_cells, sheet, AttachmentsTable2.type).values())
-    balance = list(options.get_attachments_2(ship_cells, sheet, AttachmentsTable2.balance).values())
-
-    mydata = text_collection.table_text_2
-    pups = PrettyTable(mydata)
-
-    for i in range(3):
-        pups.add_row([type_ship[i], your_ships[i], balance[i]])
-
-    print(text_collection.table_2)
-    print(pups)
-
-
-def get_table_4(option: int):
-    workbook.active = workbook[sheets[1]]  # Приложение 2
-    sheet = workbook.active
     summa = 0
 
     your_ships = options.your_ships(option)
     ship_cells = options.get_ships_table_2(your_ships, sheet)
 
-    type_ship = list(options.get_attachments_2(ship_cells, sheet, AttachmentsTable2.type).values())
+    ship_count = list(options.get_info_ships(option, AttachmentsTable8.ship_count).values())
+
     balance = list(options.get_attachments_2(ship_cells, sheet, AttachmentsTable2.balance).values())
 
     mydata = text_collection.table_text_3
     pups = PrettyTable(mydata)
 
-    count_ship = calculations_table.ship_count
     for i in range(3):
-        pups.add_row([your_ships[i], balance[i], count_ship,
-                      calculations_table.share_capital(int(balance[i]), count_ship)[0]])
-        summa = summa + int(calculations_table.share_capital(int(balance[i]), count_ship)[1])
+        count_ship_keys = list(calculations_table.share_capital(balance[i], ship_count[i], option)[1].keys())
+        calculate = calculations_table.share_capital(balance[i], ship_count[i], option)[0]
+
+        pups.add_row([count_ship_keys[i], balance[i], ship_count[i], calculate])
+
+        summa = summa + int(balance[i]) * int(ship_count[i])
 
     pups.add_row([' ', ' ', ' ', ' '])
     pups.add_row(['Итого', ' ', ' ', summa])

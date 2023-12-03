@@ -1,11 +1,11 @@
-from openpyxl import load_workbook
+import openpyxl
 from typing import List
 from config import attachments, your_option
 from view import text_collection
 from utils.enum import AttachmentsTable8
 
-workbook = load_workbook(attachments)
-sheets = load_workbook(attachments).sheetnames
+workbook = openpyxl.load_workbook(attachments)
+sheets = openpyxl.load_workbook(attachments).sheetnames
 
 
 def get_table_options_3(option: int, sheet) -> str:
@@ -65,24 +65,6 @@ def get_cargos(cell_option, sheet) -> List[str]:
     return cargo
 
 
-def cargo_for_calc(option):
-    workbook.active = workbook[sheets[2]]  # Приложение 3
-    sheet = workbook.active
-    cell_option = get_table_options_3(option, sheet)
-
-    cargo_forward = cell_option.replace('A', 'D')
-
-    old_num_option = cargo_forward[1:]
-    new_num_option = int(cargo_forward[1:]) + 1
-
-    cargo_reverse = cargo_forward.replace(old_num_option, str(new_num_option))
-
-    cargo = {text_collection.load_volume_f: str(sheet[cargo_forward].value),
-             text_collection.load_volume_r: str(sheet[cargo_reverse].value)}
-
-    return cargo
-
-
 def get_ports(cell_option, sheet) -> List[str]:
     cell_ports = [cell_option.replace('A', order) for order in ('B', 'C')]
     ports = [str(sheet[port].value) for port in cell_ports]
@@ -112,8 +94,26 @@ def get_attachments_8(ship_cells, sheet, enum):
     return option
 
 
-def get_info_ships(option: int, enum):
-    workbook.active = workbook[sheets[7]]  # Приложение 8, теперь взаимодействуем с полученными корабликами
+def cargo_for_calc(option):
+    workbook.active = workbook[sheets[2]]  # Приложение 3
+    sheet = workbook.active
+    cell_option = get_table_options_3(option, sheet)
+
+    cargo_forward = cell_option.replace('A', 'D')
+
+    old_num_option = cargo_forward[1:]
+    new_num_option = int(cargo_forward[1:]) + 1
+
+    cargo_reverse = cargo_forward.replace(old_num_option, str(new_num_option))
+
+    cargo = {text_collection.load_volume_f: str(sheet[cargo_forward].value),
+             text_collection.load_volume_r: str(sheet[cargo_reverse].value)}
+
+    return cargo
+
+
+def get_info_ships(option: int, enum) -> dict:
+    workbook.active = workbook[sheets[8]]  # Приложение 8, теперь взаимодействуем с полученными корабликами
     sheet = workbook.active
 
     your_ship = your_ships(option)
@@ -134,6 +134,8 @@ def get_info_distance(option: int):
     return distance
 
 
+def get_specific_loading_volume(option: int):
+    return
 
 
 def get_attachments_2(ship_cells, sheet, enum):

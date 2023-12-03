@@ -1,4 +1,5 @@
 class AttachmentsTable8:
+    ship_count = '6'
     length = '9'
     width = '10'
     height = '11'
