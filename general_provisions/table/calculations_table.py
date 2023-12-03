@@ -48,21 +48,21 @@ def find_volume_foreign(option: int):  # усреднённая валовая �
     return volume_f, volume_r
 
 
-def find_specific_capacity(option: int) -> tuple:  # удельная грузовместимость судна
+def find_specific_capacity(option: int) -> tuple:  # Удельная грузовместимость судна
     load_capacity_val = list(options.get_info_ships(option, AttachmentsTable8.load_capacity).values())
     hold_capacity_val = list(options.get_info_ships(option, AttachmentsTable8.hold_capacity).values())
     load_capacity_key = list(options.get_info_ships(option, AttachmentsTable8.load_capacity).keys())
 
     specific_capacity = {load_capacity_key[i]: float(hold_capacity_val[i]) / float(load_capacity_val[i]) for i in
                          range(3)}
-    calculate = {load_capacity_key[i]
-                 : f'{hold_capacity_val[i]} / {load_capacity_val[i]} = {float(hold_capacity_val[i]) / float(load_capacity_val[i])}'
-                 for i in range(3)}
+    calculate = [
+        f'{hold_capacity_val[i]} / {load_capacity_val[i]} = {float(hold_capacity_val[i]) / float(load_capacity_val[i])}'
+        for i in range(3)]
 
     return specific_capacity, calculate
 
 
-def find_rate_load(option: int) -> tuple:
+def find_rate_load(option: int) -> tuple:  # Норма загрузки судна: Qэ, т
     specific_capacity = list(find_specific_capacity(option)[0].values())  # удельная грузовместимость судна
     hold_capacity_val = list(options.get_info_ships(option,
                                                     AttachmentsTable8.hold_capacity).values())
@@ -73,18 +73,25 @@ def find_rate_load(option: int) -> tuple:
 
     rate_load_f = {}
     rate_load_r = {}
+    calculate_1 = {}
+    calculate_2 = {}
     for i in range(3):
         if float(volume[0]) > float(specific_capacity[i]):
             rate_load_f[ships[i]] = float(hold_capacity_val[i]) / float(volume[0])
+            calculate_1[ships[
+                i]] = f'{float(hold_capacity_val[i])} / {float(volume[0])} = {float(hold_capacity_val[i]) / float(volume[0])}'
         else:
             rate_load_f[ships[i]] = load_capacity_val[i]
+            calculate_1[ships[i]] = f'{load_capacity_val[i]}'
 
         if float(volume[1]) > float(specific_capacity[i]):
             rate_load_r[ships[i]] = float(hold_capacity_val[i]) / float(volume[1])
+            calculate_2[ships[
+                i]] = f'{float(hold_capacity_val[i])} / {float(volume[1])} = {float(hold_capacity_val[i]) / float(volume[1])}'
         else:
             rate_load_r[ships[i]] = load_capacity_val[i]
-
-    return rate_load_f, rate_load_r
+            calculate_2[ships[i]] = f'{load_capacity_val[i]}'
+    return rate_load_f, rate_load_r, calculate_1, calculate_2
 
 
 def find_utilization_factor(option: int):
@@ -98,7 +105,14 @@ def find_utilization_factor(option: int):
     utilization_factor_f = {rate_load_keys[i]: float(rate_load_f[i]) / float(load_capacity_val[i]) for i in range(3)}
     utilization_factor_r = {rate_load_keys[i]: float(rate_load_r[i]) / float(load_capacity_val[i]) for i in range(3)}
 
-    return utilization_factor_f, utilization_factor_r
+    calculate_1 = [
+        f'{float(rate_load_f[i])} / {float(load_capacity_val[i])} = {float(rate_load_f[i]) / float(load_capacity_val[i])}'
+        for i in range(3)]
+    calculate_2 = [
+        f'{float(rate_load_r[i])} / {float(load_capacity_val[i])} = {float(rate_load_r[i]) / float(load_capacity_val[i])}'
+        for i in range(3)]
+
+    return utilization_factor_f, utilization_factor_r, calculate_1, calculate_2
 
 
 def find_operational_speed(option: int):
@@ -109,11 +123,11 @@ def find_operational_speed(option: int):
                        for i in range(3)}
     speed_empty_dict = {list(speeds.keys())[i]: float(list(speeds.values())[i][1].strip().replace(',', '.'))
                         for i in range(3)}
-    utilization_factor_f_dict, utilization_factor_r_dict = find_utilization_factor(option)
+    utilization_factor_f_dict, utilization_factor_r_dict = find_utilization_factor(option)[0], \
+        find_utilization_factor(option)[1]
 
     speed_load = list(speed_load_dict.values())
     speed_empty = list(speed_empty_dict.values())
-    distance = float(options.get_info_distance(option))
 
     utilization_factor_f = list(utilization_factor_f_dict.values())
     utilization_factor_r = list(utilization_factor_r_dict.values())
@@ -122,11 +136,80 @@ def find_operational_speed(option: int):
                            for i in range(3)}
     operational_speed_r = {ships[i]: speed_empty[i] - utilization_factor_r[i] * (speed_empty[i] - speed_load[i])
                            for i in range(3)}
-    calculate_f = {ships[i]
-                   : f'{speed_empty[i]} - {utilization_factor_f[i]} * ({speed_empty[i]} - {speed_load[i]}) = {speed_empty[i] - utilization_factor_f[i] * (speed_empty[i] - speed_load[i])}'
-                   for i in range(3)}
-    calculate_r = {ships[i]
-                   : f'{speed_empty[i]} - {utilization_factor_r[i]} * ({speed_empty[i]} - {speed_load[i]}) = {speed_empty[i] - utilization_factor_r[i] * (speed_empty[i] - speed_load[i])}'
-                   for i in range(3)}
+    calculate_f = [
+        f'{speed_empty[i]} - {utilization_factor_f[i]} * ({speed_empty[i]} - {speed_load[i]}) = {speed_empty[i] - utilization_factor_f[i] * (speed_empty[i] - speed_load[i])}'
+        for i in range(3)]
+    calculate_r = [
+        f'{speed_empty[i]} - {utilization_factor_r[i]} * ({speed_empty[i]} - {speed_load[i]}) = {speed_empty[i] - utilization_factor_r[i] * (speed_empty[i] - speed_load[i])}'
+        for i in range(3)]
 
     return operational_speed_f, operational_speed_r, calculate_f, calculate_r
+
+
+def find_times_with_cargo(option: int) -> tuple:
+    operational_speed_vals_f = list(find_operational_speed(option)[0].values())
+    operational_speed_keys_f = list(find_operational_speed(option)[0].keys())
+    operational_speed_vals_r = list(find_operational_speed(option)[1].values())
+    operational_speed_keys_r = list(find_operational_speed(option)[1].keys())
+
+    distance = float(options.get_info_distance(option))
+
+    times_forward = {operational_speed_keys_f[i]: distance / (operational_speed_vals_f[i] * 0.85) for i in range(3)}
+    times_reverse = {operational_speed_keys_r[i]: distance / (operational_speed_vals_r[i] * 0.85) for i in range(3)}
+
+    calculate_f = [
+        f'{distance} / ({operational_speed_vals_f[i]} * 0.85) = {distance / (operational_speed_vals_f[i] * 0.85)}'
+        for i in range(3)]
+    calculate_r = [
+        f'{distance} / ({operational_speed_keys_r[i]} * 0.85) = {distance / (operational_speed_vals_r[i] * 0.85)}'
+        for i in range(3)]
+
+    return times_forward, times_reverse, calculate_f, calculate_r
+
+
+def find_duration_stay(option: int) -> tuple:
+    rate_f, rate_f_keys = list(find_rate_load(option)[0].values()), list(find_rate_load(option)[0].keys())
+    rate_r, rate_r_keys = list(find_rate_load(option)[1].values()), list(find_rate_load(option)[1].keys())
+
+    volume_f, volume_r = find_volume_foreign(option)
+
+    duration_stay_f = {rate_f_keys[i]: float(rate_f[i]) / float(volume_f) for i in range(3)}
+    duration_stay_r = {rate_r_keys[i]: float(rate_r[i]) / float(volume_r) for i in range(3)}
+
+    calculate_f = [f'{float(rate_f[i])} / {float(volume_f)} = {float(rate_f[i]) / float(volume_f)}'
+                   for i in range(3)]
+    calculate_r = [f'{float(rate_r[i])} / {float(volume_r)} = {float(rate_r[i]) / float(volume_r)}'
+                   for i in range(3)]
+    return duration_stay_f, duration_stay_r, calculate_f, calculate_r
+
+
+def find_flight_time(option: int):
+    ships = list(options.get_info_ships(option, AttachmentsTable8.ship_count).keys())
+
+    duration_stay_time_f = list(find_duration_stay(option)[0].values())
+    duration_stay_time_r = list(find_duration_stay(option)[1].values())
+
+    time_cargo_f, time_cargo_r = (list(find_times_with_cargo(option)[0].values()),
+                                  list(find_times_with_cargo(option)[1].values()))
+    flight_time_f = {ships[i]: time_cargo_f[i] + duration_stay_time_f[i] + duration_stay_time_f[i] for i in range(3)}
+    flight_time_r = {ships[i]: time_cargo_r[i] + duration_stay_time_r[i] + duration_stay_time_r[i] for i in range(3)}
+
+    calculate_f = [
+        f'{time_cargo_f[i]} + {duration_stay_time_f[i]} + {duration_stay_time_f[i]} = {(time_cargo_f[i] + duration_stay_time_f[i] + duration_stay_time_f[i]) / 24} суток'
+        for i in range(3)]
+    calculate_r = [
+        f'{time_cargo_r[i]} + {duration_stay_time_r[i]} + {duration_stay_time_r[i]} = {(time_cargo_r[i] + duration_stay_time_r[i] + duration_stay_time_r[i]) / 24} суток'
+        for i in range(3)]
+    return flight_time_f, flight_time_r, calculate_f, calculate_r
+
+
+def find_duration_turn(option: int):
+    ships = list(options.get_info_ships(option, AttachmentsTable8.ship_count).keys())
+
+    forward_time_f = list(find_flight_time(option)[0].values())
+    forward_time_r = list(find_flight_time(option)[1].values())
+
+    duration_turn = {ships[i]: forward_time_f[i] + forward_time_r[i] for i in range(3)}
+    calculate = [f'{forward_time_f[i]} + {forward_time_r[i]} = {(forward_time_f[i] + forward_time_r[i]) / 24} суток' for i in
+                 range(3)]
+    return duration_turn, calculate

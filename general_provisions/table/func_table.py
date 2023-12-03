@@ -82,3 +82,15 @@ def get_table_3(option: int):
 
     print(text_collection.table_4)
     print(pups)
+
+
+def get_table_4(option: int):
+    mydata = text_collection.table_text_4
+    pups = PrettyTable(mydata)
+
+    your_ships = options.your_ships(option)
+    for i in range(1, 14):
+        pups.add_row([] + [])
+
+    print(text_collection.table_5)
+    print(pups)
