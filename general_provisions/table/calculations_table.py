@@ -1,6 +1,6 @@
 from general_provisions import options
 from general_provisions.options import workbook, sheets
-from utils.enum import AttachmentsTable8, AttachmentsTable6
+from utils.enums import AttachmentsTable8, AttachmentsTable6
 from general_provisions import options
 from view import text_collection
 from random import randint
@@ -366,6 +366,28 @@ def calculation_structure_turn(option: int):
     return ''
 
 
+def summa_cost_maintaining(option: int):
+    ships = options.your_ships(option)
+
+    cost_maintaining = {}
+    for ship in ships:
+        cost_maintaining[ship] = (
+            round(find_cost_maintaining(option)[0].get(ship) + find_cost_maintaining(option)[1].get(ship), 1))
+
+    return cost_maintaining
+
+
+def summa_crew_expenses(option: int):
+    ships = options.your_ships(option)
+
+    crew_expenses = {}
+    for ship in ships:
+        crew_expenses[ship] = (
+            round(find_crew_expenses(option)[0].get(ship) + find_crew_expenses(option)[1].get(ship), 1))
+
+    return crew_expenses
+
+
 def find_max_crew_expenses_ship(ships, option):
     crew_expenses_f = find_crew_expenses(option)[0]
     crew_expenses_r = find_crew_expenses(option)[1]
@@ -408,9 +430,9 @@ def canalization(option: int):
     
     Также:
     Большая доля расходов на содержание экипажа приходится на судно {max(crews)}({crews.get(max(crews))}).
-    По итоговому показателю "Расходы за оборот" и по анализу всех показателей и характеристик в целом видно, что эффективным является судно {average_ship}.
+    По итоговому показателю "Расходы за оборот" и по анализу всех показателей и характеристик в целом видно,
+    что эффективным является судно {average_ship}.
     """
 
     print(anal)
     return ''
-

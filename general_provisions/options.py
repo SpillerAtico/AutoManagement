@@ -2,7 +2,7 @@ import openpyxl
 from typing import List
 from config import attachments, your_option
 from view import text_collection
-from utils.enum import AttachmentsTable8, AttachmentsTable6
+from utils.enums import AttachmentsTable8, AttachmentsTable6
 
 workbook = openpyxl.load_workbook(attachments)
 sheets = openpyxl.load_workbook(attachments).sheetnames

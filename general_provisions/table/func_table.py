@@ -1,10 +1,11 @@
 from view import text_collection
 from general_provisions import options
 from general_provisions.options import workbook, sheets
-from utils.enum import cells_1, AttachmentsTable8, AttachmentsTable2, AttachmentsTable6
+from utils.enums import cells_1, AttachmentsTable8, AttachmentsTable2, AttachmentsTable6
 from prettytable import PrettyTable
 from . import calculations_table
 import switcher
+from utils import diagramm_create
 
 
 def get_table_1(option: int):
@@ -151,14 +152,18 @@ def get_structure_turn(option: int, action):
         for i in range(15, 24):
             pups.add_row([switcher.choose_def_value(option, i)[0]] + [switcher.choose_def_value(option, i)[1][0]] + [
                 switcher.choose_def_value(option, i)[1][1]] + [switcher.choose_def_value(option, i)[1][2]])
+
     elif action == "да":
         for i in range(15, 24):
             pups.add_row([switcher.choose_def_value(option, i)[0]] + [switcher.choose_def_value(option, i)[1][0]] + [
                 switcher.choose_def_value(option, i)[1][1]] + [switcher.choose_def_value(option, i)[1][2]])
-        print(calculations_table.calculation_structure_turn(option))
+        calculations_table.calculation_structure_turn(option)
     else:
         print('Только да или нет')
 
     print(text_collection.structure_turn)
     print(pups)
     print(calculations_table.canalization(option))
+    operand = input('Выводим диаграммы? (да/нет): ')
+    if operand == 'да':
+        diagramm_create.get_diagrams(option)
