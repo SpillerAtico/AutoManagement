@@ -115,7 +115,43 @@ def choose_def_value(option, case) -> tuple:
         duration_turnover = text_collection.duration_turnover
         duration_turn = list(calculations_table.find_duration_turn(option)[0].values())
         return duration_turnover, duration_turn
-    if case == 14:
+    if case == 14:  # Расчёт провозной способности судов
         capacity_carrying = text_collection.carrying_capacity
         carrying_capacity = list(calculations_table.find_carrying_capacity(option)[0].values())
         return capacity_carrying, carrying_capacity
+    if case == 15:  # Затраты судно без учета стоимости топлива в прямом направлении
+        cost_maintaining_f = text_collection.cost_maintaining_f
+        cost = list(calculations_table.find_cost_maintaining(option)[0].values())
+        return cost_maintaining_f, cost
+    if case == 16:  # Затраты судно без учета стоимости топлива в обратном направлении
+        cost_maintaining_r = text_collection.cost_maintaining_r
+        cost = list(calculations_table.find_cost_maintaining(option)[1].values())
+        return cost_maintaining_r, cost
+    if case == 17:  # Расходы содержания экипажа в прямом направлении
+        crew_expenses_f = text_collection.crew_expenses_f
+        cost = list(calculations_table.find_crew_expenses(option)[0].values())
+        return crew_expenses_f, cost
+    if case == 18:  # Расходы содержания экипажа в обратном направлении
+        crew_expenses_r = text_collection.crew_expenses_r
+        cost = list(calculations_table.find_crew_expenses(option)[1].values())
+        return crew_expenses_r, cost
+    if case == 19:  # Cудовые сборы
+        ship_fees = text_collection.ship_fees
+        cost = list(calculations_table.find_ship_fees(option)[0].values())
+        return ship_fees, cost
+    if case == 20:  # Расходы на топливо в прямом (обратном) направлении
+        fuel_costs = text_collection.fuel_costs
+        cost = list(calculations_table.find_fuel_costs(option)[0].values())
+        return fuel_costs, cost
+    if case == 21:  # Расходы за прямое направление
+        consumption_f = text_collection.consumption_f
+        cost = list(calculations_table.find_consumption(option)[0].values())
+        return consumption_f, cost
+    if case == 22:  # Расходы за обратное направление
+        consumption_r = text_collection.consumption_r
+        cost = list(calculations_table.find_consumption(option)[1].values())
+        return consumption_r, cost
+    if case == 23:  # Расходы за оборот
+        full_consumption = text_collection.full_consumption
+        cost = list(calculations_table.find_full_consumption(option)[0].values())
+        return full_consumption, cost

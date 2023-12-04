@@ -329,6 +329,7 @@ def find_consumption(option: int):
 
 def find_full_consumption(option: int):
     ships = options.your_ships(option)
+    print(ships)
     one_f, one_r = find_consumption(option)[0], find_consumption(option)[1]
 
     full_consumption = {ship: one_f.get(ship) + one_r.get(ship) for ship in ships}
@@ -337,4 +338,3 @@ def find_full_consumption(option: int):
         for ship in ships}
 
     return full_consumption, calculate
-
