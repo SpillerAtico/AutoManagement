@@ -3,6 +3,7 @@ from general_provisions.options import workbook, sheets
 from utils.enum import AttachmentsTable8, AttachmentsTable6
 from general_provisions import options
 from view import text_collection
+from random import randint
 
 
 def share_capital(balance_sell, ship_count, option):
@@ -362,5 +363,54 @@ def calculation_structure_turn(option: int):
     print(f'{text_collection.consumption_f}\n{consumption_f[0]}\n{consumption_f[1]}\n{consumption_f[2]}\n')
     print(f'{text_collection.consumption_r}\n{consumption_r[0]}\n{consumption_r[1]}\n{consumption_r[2]}\n')
     print(f'{text_collection.full_consumption}\n{full_consumption[0]}\n{full_consumption[1]}\n{full_consumption[2]}\n')
+    return ''
+
+
+def find_max_crew_expenses_ship(ships, option):
+    crew_expenses_f = find_crew_expenses(option)[0]
+    crew_expenses_r = find_crew_expenses(option)[1]
+
+    crew_expenses = {ship: crew_expenses_f.get(ship) + crew_expenses_r.get(ship) for ship in ships}
+
+    return crew_expenses
+
+
+def find_average_load_capacity(option):
+    average_capacity = options.get_info_ships(option, AttachmentsTable8.load_capacity)
+
+    del average_capacity[max(average_capacity)]
+    del average_capacity[min(average_capacity)]
+
+    return average_capacity
+
+
+def find_min_load_capacity(option):
+    average_capacity = options.get_info_ships(option, AttachmentsTable8.load_capacity)
+
+    return average_capacity
+
+
+def canalization(option: int):
+    ships = options.your_ships(option)
+    crews = find_max_crew_expenses_ship(ships, option)
+
+    average_ship = list(find_average_load_capacity(option).keys())[0]
+    average_capacity = list(find_average_load_capacity(option).values())[0]
+
+    minimal_ship = options.get_info_ships(option, AttachmentsTable8.load_capacity)
+
+    anal = f"""
+    По результатам расчетов можно сделать вывод, что меньшая доля расходов 
+    на содержание судна приходится на судно {average_ship}.
+    У {average_ship} грузоподъемность и грузовместимость не самые большие - {average_capacity},
+    но больше, чем у судна {min(minimal_ship)} - {minimal_ship.get(min(minimal_ship))}.
+    Судовые сборы по всем суднам примерно одинаковые. 
+    
+    Также:
+    Большая доля расходов на содержание экипажа приходится на судно {max(crews)}({crews.get(max(crews))}).
+    По итоговому показателю "Расходы за оборот" и по анализу всех показателей и характеристик в целом видно, что эффективным является судно {average_ship}.
+    """
+
+    print(anal)
     return ''
 

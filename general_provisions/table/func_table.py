@@ -161,3 +161,4 @@ def get_structure_turn(option: int, action):
 
     print(text_collection.structure_turn)
     print(pups)
+    print(calculations_table.canalization(option))
