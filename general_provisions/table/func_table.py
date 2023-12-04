@@ -4,8 +4,7 @@ from general_provisions.options import workbook, sheets
 from utils.enums import cells_1, AttachmentsTable8, AttachmentsTable2, AttachmentsTable6
 from prettytable import PrettyTable
 from . import calculations_table
-import switcher
-from utils import diagramm_create
+from utils import diagramm_create, switcher
 
 
 def get_table_1(option: int):

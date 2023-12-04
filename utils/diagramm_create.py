@@ -44,6 +44,7 @@ def diagramma(ship, cost_maintaining, crew_expenses, ship_fees, fuel_costs):
 
     # show plot
     plt.show()
+    return ''
 
 
 def get_diagrams(option: int):
