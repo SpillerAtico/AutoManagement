@@ -2,6 +2,7 @@ from general_provisions import options
 from general_provisions.options import workbook, sheets
 from utils.enum import AttachmentsTable8, AttachmentsTable6
 from general_provisions import options
+from view import text_collection
 
 
 def share_capital(balance_sell, ship_count, option):
@@ -329,7 +330,6 @@ def find_consumption(option: int):
 
 def find_full_consumption(option: int):
     ships = options.your_ships(option)
-    print(ships)
     one_f, one_r = find_consumption(option)[0], find_consumption(option)[1]
 
     full_consumption = {ship: one_f.get(ship) + one_r.get(ship) for ship in ships}
@@ -338,3 +338,29 @@ def find_full_consumption(option: int):
         for ship in ships}
 
     return full_consumption, calculate
+
+
+def calculation_structure_turn(option: int):
+    cost_maintaining_f = list(find_cost_maintaining(option)[2].values())
+    cost_maintaining_r = list(find_cost_maintaining(option)[3].values())
+    crew_expenses_f = list(find_crew_expenses(option)[2].values())
+    crew_expenses_r = list(find_crew_expenses(option)[3].values())
+    ship_fees = list(find_ship_fees(option)[1].values())
+    fuel_costs = list(find_fuel_costs(option)[1].values())
+    consumption_f = list(find_consumption(option)[2].values())
+    consumption_r = list(find_consumption(option)[3].values())
+    full_consumption = list(find_full_consumption(option)[1].values())
+
+    print(
+        f'{text_collection.cost_maintaining_f}\n{cost_maintaining_f[0]}\n{cost_maintaining_f[1]}\n{cost_maintaining_f[2]}\n')
+    print(
+        f'{text_collection.cost_maintaining_r}\n{cost_maintaining_r[0]}\n{cost_maintaining_r[1]}\n{cost_maintaining_r[2]}\n')
+    print(f'{text_collection.crew_expenses_f}\n{crew_expenses_f[0]}\n{crew_expenses_f[1]}\n{crew_expenses_f[2]}\n')
+    print(f'{text_collection.crew_expenses_r}\n{crew_expenses_r[0]}\n{crew_expenses_r[1]}\n{crew_expenses_r[2]}\n')
+    print(f'{text_collection.ship_fees}\n{ship_fees[0]}\n{ship_fees[1]}\n{ship_fees[2]}\n')
+    print(f'{text_collection.fuel_costs}\n{fuel_costs[0]}\n{fuel_costs[1]}\n{fuel_costs[2]}\n')
+    print(f'{text_collection.consumption_f}\n{consumption_f[0]}\n{consumption_f[1]}\n{consumption_f[2]}\n')
+    print(f'{text_collection.consumption_r}\n{consumption_r[0]}\n{consumption_r[1]}\n{consumption_r[2]}\n')
+    print(f'{text_collection.full_consumption}\n{full_consumption[0]}\n{full_consumption[1]}\n{full_consumption[2]}\n')
+    return ''
+

@@ -142,3 +142,22 @@ def get_table_5(option: int):
     print(text_collection.table_6)
     print(pups)
 
+
+def get_structure_turn(option: int, action):
+    mydata = [text_collection.specifications] + [switcher.choose_def_calc(option, 1)[1][0]] + [
+        switcher.choose_def_calc(option, 1)[1][1]] + [switcher.choose_def_calc(option, 1)[1][2]]
+    pups = PrettyTable(mydata)
+    if action == "нет":
+        for i in range(15, 24):
+            pups.add_row([switcher.choose_def_value(option, i)[0]] + [switcher.choose_def_value(option, i)[1][0]] + [
+                switcher.choose_def_value(option, i)[1][1]] + [switcher.choose_def_value(option, i)[1][2]])
+    elif action == "да":
+        for i in range(15, 24):
+            pups.add_row([switcher.choose_def_value(option, i)[0]] + [switcher.choose_def_value(option, i)[1][0]] + [
+                switcher.choose_def_value(option, i)[1][1]] + [switcher.choose_def_value(option, i)[1][2]])
+        print(calculations_table.calculation_structure_turn(option))
+    else:
+        print('Только да или нет')
+
+    print(text_collection.structure_turn)
+    print(pups)

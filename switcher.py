@@ -119,6 +119,7 @@ def choose_def_value(option, case) -> tuple:
         capacity_carrying = text_collection.carrying_capacity
         carrying_capacity = list(calculations_table.find_carrying_capacity(option)[0].values())
         return capacity_carrying, carrying_capacity
+
     if case == 15:  # Затраты судно без учета стоимости топлива в прямом направлении
         cost_maintaining_f = text_collection.cost_maintaining_f
         cost = list(calculations_table.find_cost_maintaining(option)[0].values())
@@ -155,3 +156,4 @@ def choose_def_value(option, case) -> tuple:
         full_consumption = text_collection.full_consumption
         cost = list(calculations_table.find_full_consumption(option)[0].values())
         return full_consumption, cost
+
