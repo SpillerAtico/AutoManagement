@@ -1,9 +1,10 @@
 from view import text_collection
 from general_provisions import options
 from general_provisions.options import workbook, sheets
-from utils.enum import cells_1, cells_2, AttachmentsTable8, AttachmentsTable2
+from utils.enum import cells_1, AttachmentsTable8, AttachmentsTable2
 from prettytable import PrettyTable
 from . import calculations_table
+import switcher
 
 
 def get_table_1(option: int):
@@ -84,13 +85,23 @@ def get_table_3(option: int):
     print(pups)
 
 
-def get_table_4(option: int):
-    mydata = text_collection.table_text_4
+def get_table_4(option: int, action):
+    mydata = [text_collection.specifications] + [switcher.choose_def_calc(option, 1)[1][0]] + [
+        switcher.choose_def_calc(option, 1)[1][1]] + [switcher.choose_def_calc(option, 1)[1][2]]
     pups = PrettyTable(mydata)
+    if action == 'да':
+        for i in range(2, 14):
+            pups.add_row([switcher.choose_def_calc(option, i)[0]] + [switcher.choose_def_calc(option, i)[1][0]] + [
+                switcher.choose_def_calc(option, i)[1][1]] + [switcher.choose_def_calc(option, i)[1][2]])
+        print(text_collection.table_5)
+        print(pups)
 
-    your_ships = options.your_ships(option)
-    for i in range(1, 14):
-        pups.add_row([] + [])
+    elif action == 'нет':
+        for i in range(2, 14):
+            pups.add_row([switcher.choose_def_calc(option, i)[0]] + [switcher.choose_def_value(option, i)[1][0]] + [
+                switcher.choose_def_value(option, i)[1][1]] + [switcher.choose_def_value(option, i)[1][2]])
+        print(text_collection.table_5)
+        print(pups)
 
-    print(text_collection.table_5)
-    print(pups)
+    else:
+        print('Только да или нет')

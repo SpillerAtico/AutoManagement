@@ -161,7 +161,7 @@ def find_times_with_cargo(option: int) -> tuple:
         f'{distance} / ({operational_speed_vals_f[i]} * 0.85) = {distance / (operational_speed_vals_f[i] * 0.85)}'
         for i in range(3)]
     calculate_r = [
-        f'{distance} / ({operational_speed_keys_r[i]} * 0.85) = {distance / (operational_speed_vals_r[i] * 0.85)}'
+        f'{distance} / ({operational_speed_vals_r[i]} * 0.85) = {distance / (operational_speed_vals_r[i] * 0.85)}'
         for i in range(3)]
 
     return times_forward, times_reverse, calculate_f, calculate_r
@@ -195,10 +195,10 @@ def find_flight_time(option: int):
     flight_time_r = {ships[i]: time_cargo_r[i] + duration_stay_time_r[i] + duration_stay_time_r[i] for i in range(3)}
 
     calculate_f = [
-        f'{time_cargo_f[i]} + {duration_stay_time_f[i]} + {duration_stay_time_f[i]} = {(time_cargo_f[i] + duration_stay_time_f[i] + duration_stay_time_f[i]) / 24} суток'
+        f'{time_cargo_f[i]} + {duration_stay_time_f[i]} ч. + {duration_stay_time_f[i]} ч. = {(time_cargo_f[i] + duration_stay_time_f[i] + duration_stay_time_f[i]) / 24} суток'
         for i in range(3)]
     calculate_r = [
-        f'{time_cargo_r[i]} + {duration_stay_time_r[i]} + {duration_stay_time_r[i]} = {(time_cargo_r[i] + duration_stay_time_r[i] + duration_stay_time_r[i]) / 24} суток'
+        f'{time_cargo_r[i]} + {duration_stay_time_r[i]} ч. + {duration_stay_time_r[i]} ч. = {(time_cargo_r[i] + duration_stay_time_r[i] + duration_stay_time_r[i]) / 24} суток'
         for i in range(3)]
     return flight_time_f, flight_time_r, calculate_f, calculate_r
 
@@ -210,6 +210,6 @@ def find_duration_turn(option: int):
     forward_time_r = list(find_flight_time(option)[1].values())
 
     duration_turn = {ships[i]: forward_time_f[i] + forward_time_r[i] for i in range(3)}
-    calculate = [f'{forward_time_f[i]} + {forward_time_r[i]} = {(forward_time_f[i] + forward_time_r[i]) / 24} суток' for i in
+    calculate = [f'{forward_time_f[i]} ч. + {forward_time_r[i]} ч. = {(forward_time_f[i] + forward_time_r[i]) / 24} суток' for i in
                  range(3)]
     return duration_turn, calculate

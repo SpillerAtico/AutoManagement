@@ -79,4 +79,4 @@ time_with_cargo_r = "Время хода с грузом: tх гр, час в о
 flight_time_f = "Время рейса в прямом направлении, сут."
 flight_time_r = "Время рейса в обратном  направлении, сут."
 duration_turnover = "Продолжительность оборота, сут. "
-table_text_4 = [specifications, ship_1, ship_2, ship_3]
+
