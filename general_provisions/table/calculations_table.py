@@ -1,6 +1,6 @@
 from general_provisions import options
 from general_provisions.options import workbook, sheets
-from utils.enum import AttachmentsTable8
+from utils.enum import AttachmentsTable8, AttachmentsTable6
 from general_provisions import options
 
 
@@ -191,8 +191,10 @@ def find_flight_time(option: int):
 
     time_cargo_f, time_cargo_r = (list(find_times_with_cargo(option)[0].values()),
                                   list(find_times_with_cargo(option)[1].values()))
-    flight_time_f = {ships[i]: time_cargo_f[i] + duration_stay_time_f[i] + duration_stay_time_f[i] for i in range(3)}
-    flight_time_r = {ships[i]: time_cargo_r[i] + duration_stay_time_r[i] + duration_stay_time_r[i] for i in range(3)}
+    flight_time_f = {ships[i]: (time_cargo_f[i] + duration_stay_time_f[i] + duration_stay_time_f[i]) / 24 for i in
+                     range(3)}
+    flight_time_r = {ships[i]: (time_cargo_r[i] + duration_stay_time_r[i] + duration_stay_time_r[i]) / 24 for i in
+                     range(3)}
 
     calculate_f = [
         f'{time_cargo_f[i]} + {duration_stay_time_f[i]} ч. + {duration_stay_time_f[i]} ч. = {(time_cargo_f[i] + duration_stay_time_f[i] + duration_stay_time_f[i]) / 24} суток'
@@ -210,6 +212,129 @@ def find_duration_turn(option: int):
     forward_time_r = list(find_flight_time(option)[1].values())
 
     duration_turn = {ships[i]: forward_time_f[i] + forward_time_r[i] for i in range(3)}
-    calculate = [f'{forward_time_f[i]} ч. + {forward_time_r[i]} ч. = {(forward_time_f[i] + forward_time_r[i]) / 24} суток' for i in
-                 range(3)]
+    calculate = [
+        f'{forward_time_f[i]} ч. + {forward_time_r[i]} ч. = {(forward_time_f[i] + forward_time_r[i]) / 24} суток'
+        for i in range(3)]
     return duration_turn, calculate
+
+
+def find_carrying_capacity(option: int):
+    ship_count = list(options.get_info_ships(option, AttachmentsTable8.ship_count).values())
+    ships = list(options.get_info_ships(option, AttachmentsTable8.ship_count).keys())
+
+    duration_turn = list(find_duration_turn(option)[0].values())
+
+    rate_f = list(find_rate_load(option)[0].values())
+    rate_r = list(find_rate_load(option)[1].values())
+
+    carrying_capacity = {
+        ships[i]: int(ship_count[i]) * int(duration_turn[i]) * (round(int(rate_f[i])) + round(int(rate_r[i])))
+        for i in range(3)}
+
+    calculate = {ships[
+                     i]: f'{int(ship_count[i])} * {int(duration_turn[i])} * ({round(int(rate_f[i]))} + {round(int(rate_r[i]))}) = {int(ship_count[i]) * int(duration_turn[i]) * (round(int(rate_f[i])) + round(int(rate_r[i])))}'
+                 for i in range(3)}
+
+    return carrying_capacity, calculate
+
+
+def find_cost_maintaining(option: int):
+    ships = options.your_ships(option)
+
+    costs = options.get_info_ships_6(option, AttachmentsTable6.cost_price)
+    times_f, times_r = find_flight_time(option)[0], find_flight_time(option)[1]
+
+    cost_maintaining_f = {ship: round(float(costs.get(ship)) * float(times_f.get(ship)), 1) for ship in ships}
+    cost_maintaining_r = {ship: round(float(costs.get(ship)) * float(times_r.get(ship)), 1) for ship in ships}
+
+    calculate_f = {
+        ship: f'{float(costs.get(ship))} * {float(times_f.get(ship))} = {float(costs.get(ship)) * float(times_f.get(ship))} долл'
+        for ship in ships}
+    calculate_r = {
+        ship: f'{float(costs.get(ship))} * {float(times_r.get(ship))} = {float(costs.get(ship)) * float(times_r.get(ship))} долл'
+        for ship in ships}
+
+    return cost_maintaining_f, cost_maintaining_r, calculate_f, calculate_r
+
+
+def find_crew_expenses(option: int):
+    ships = options.your_ships(option)
+
+    number_crew = options.get_info_ships_6(option, AttachmentsTable6.number_crew)
+    times_f, times_r = find_flight_time(option)[0], find_flight_time(option)[1]
+
+    crew_expenses_f = {ship: round(float(number_crew.get(ship)) * 18 * float(times_f.get(ship)), 1) for ship in ships}
+    crew_expenses_r = {ship: round(float(number_crew.get(ship)) * 18 * float(times_r.get(ship)), 1) for ship in ships}
+
+    calculate_f = {
+        ship: f'{float(number_crew.get(ship))} * 18 * {float(times_f.get(ship))} = {float(number_crew.get(ship)) * 18 * float(times_f.get(ship))}  долл'
+        for ship in ships}
+    calculate_r = {
+        ship: f'{float(number_crew.get(ship))} * 18 * {float(times_r.get(ship))} = {float(number_crew.get(ship)) * 18 * float(times_r.get(ship))}  долл'
+        for ship in ships}
+
+    return crew_expenses_f, crew_expenses_r, calculate_f, calculate_r
+
+
+def find_ship_fees(option: int):
+    ships = options.your_ships(option)
+    fees = options.ship_fees_table_7(option)
+
+    if len(fees.get(ships[0])) == 3:
+        ship_fees = {ship: round(fees.get(ship)[0] + fees.get(ship)[1] + fees.get(ship)[2], 2) for ship in ships}
+        calculate = {ship: {
+            f'{fees.get(ship)[0]} + {fees.get(ship)[1]} + {fees.get(ship)[2]} = {fees.get(ship)[0] + fees.get(ship)[1] + fees.get(ship)[2]} долл'}
+            for ship in ships}
+        return ship_fees, calculate
+    elif len(fees.get(ships[0])) == 2:
+        ship_fees = {ship: fees.get(ship)[0] + fees.get(ship)[1] for ship in ships}
+        calculate = {ship: {f'{fees.get(ship)[0]} + {fees.get(ship)[1]} = {fees.get(ship)[0] + fees.get(ship)[1]} долл'}
+                     for ship in ships}
+        return ship_fees, calculate
+
+
+def find_fuel_costs(option: int):
+    ships = options.your_ships(option)
+    specific_fuel = options.get_info_ships_6(option, AttachmentsTable6.specific_fuel)
+
+    fuel_costs = {ship: round(700 * float(specific_fuel.get(ship)) * 712 * 0.00108, 1) for ship in ships}
+    calculate = {
+        ship: f'700 * {float(specific_fuel.get(ship))} * 712 * 0.00108 = {700 * float(specific_fuel.get(ship)) * 712 * 0.00108} долл'
+        for ship in ships}
+
+    return fuel_costs, calculate
+
+
+def find_consumption(option: int):
+    ships = options.your_ships(option)
+
+    one_f, one_r = find_cost_maintaining(option)[0], find_cost_maintaining(option)[1]
+    two_f, two_r = find_crew_expenses(option)[0], find_crew_expenses(option)[1]
+    three = find_ship_fees(option)[0]
+    four = find_fuel_costs(option)[0]
+
+    consumption_f = {ship: round(one_f.get(ship) + two_f.get(ship) + three.get(ship) + four.get(ship))
+                     for ship in ships}
+    consumption_r = {ship: round(one_r.get(ship) + two_r.get(ship) + three.get(ship) + four.get(ship))
+                     for ship in ships}
+    calculate_f = {
+        ship: f'{one_f.get(ship)} + {two_f.get(ship)} + {three.get(ship)} + {four.get(ship)} = {one_f.get(ship) + two_f.get(ship) + three.get(ship) + four.get(ship)}'
+        for ship in ships}
+    calculate_r = {
+        ship: f'{one_r.get(ship)} + {two_r.get(ship)} + {three.get(ship)} + {four.get(ship)} = {one_r.get(ship) + two_r.get(ship) + three.get(ship) + four.get(ship)}'
+        for ship in ships}
+
+    return consumption_f, consumption_r, calculate_f, calculate_r
+
+
+def find_full_consumption(option: int):
+    ships = options.your_ships(option)
+    one_f, one_r = find_consumption(option)[0], find_consumption(option)[1]
+
+    full_consumption = {ship: one_f.get(ship) + one_r.get(ship) for ship in ships}
+    calculate = {
+        ship: f'{float(one_f.get(ship))} + {float(one_r.get(ship))} = {float(one_f.get(ship) + one_r.get(ship))}'
+        for ship in ships}
+
+    return full_consumption, calculate
+

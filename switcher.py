@@ -56,6 +56,10 @@ def choose_def_calc(option, case) -> tuple:
         duration_turnover = text_collection.duration_turnover
         duration_turn = calculations_table.find_duration_turn(option)[1]
         return duration_turnover, duration_turn
+    if case == 14:
+        capacity_carrying = text_collection.carrying_capacity
+        carrying_capacity = list(calculations_table.find_carrying_capacity(option)[1].values())
+        return capacity_carrying, carrying_capacity
 
 
 def choose_def_value(option, case) -> tuple:
@@ -111,5 +115,7 @@ def choose_def_value(option, case) -> tuple:
         duration_turnover = text_collection.duration_turnover
         duration_turn = list(calculations_table.find_duration_turn(option)[0].values())
         return duration_turnover, duration_turn
-
-
+    if case == 14:
+        capacity_carrying = text_collection.carrying_capacity
+        carrying_capacity = list(calculations_table.find_carrying_capacity(option)[0].values())
+        return capacity_carrying, carrying_capacity

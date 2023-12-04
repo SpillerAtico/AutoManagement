@@ -1,7 +1,7 @@
 from view import text_collection
 from general_provisions import options
 from general_provisions.options import workbook, sheets
-from utils.enum import cells_1, AttachmentsTable8, AttachmentsTable2
+from utils.enum import cells_1, AttachmentsTable8, AttachmentsTable2, AttachmentsTable6
 from prettytable import PrettyTable
 from . import calculations_table
 import switcher
@@ -14,7 +14,7 @@ def get_table_1(option: int):
 
     your_ship = options.your_ships(option)
     cargo = options.get_cargos(cell_option, sheet)
-    port = options.get_ports(cell_option, sheet)
+    port = options.get_ports(option)
     distance = options.get_distance(cell_option, sheet)
 
     mydata = [text_collection.ports, text_collection.type_cargo, text_collection.ship_types,
@@ -28,7 +28,6 @@ def get_table_1(option: int):
     pups = PrettyTable(mydata)
     pups.add_row([navigation, cargos, ships, distance_swim])
 
-    print(text_collection.separator)
     print(text_collection.table_1)
     print(pups)
 
@@ -105,3 +104,41 @@ def get_table_4(option: int, action):
 
     else:
         print('Только да или нет')
+
+
+def get_carrying_capacity(option: int, action):
+    mydata = [switcher.choose_def_calc(option, 1)[1][0]] + [switcher.choose_def_calc(option, 1)[1][1]] + [
+        switcher.choose_def_calc(option, 1)[1][2]]
+    pups = PrettyTable(mydata)
+
+    if action == 'да':
+        pups.add_row([switcher.choose_def_calc(option, 14)[1][0]] + [switcher.choose_def_calc(option, 14)[1][1]] + [
+            switcher.choose_def_calc(option, 14)[1][2]])
+        print(switcher.choose_def_value(option, 14)[0])
+        print(pups)
+
+    elif action == 'нет':
+        pups.add_row([switcher.choose_def_value(option, 14)[1][0]] + [switcher.choose_def_value(option, 14)[1][1]] + [
+            switcher.choose_def_value(option, 14)[1][2]])
+        print(switcher.choose_def_value(option, 14)[0])
+        print(pups)
+
+    else:
+        print('Только да или нет')
+
+
+def get_table_5(option: int):
+    ships = list(options.get_info_ships_6(option, AttachmentsTable6.type_ship).keys())
+    type_ship = list(options.get_info_ships_6(option, AttachmentsTable6.type_ship).values())
+    cost = list(options.get_info_ships_6(option, AttachmentsTable6.cost_price).values())
+    specific_fuel = list(options.get_info_ships_6(option, AttachmentsTable6.specific_fuel).values())
+    crew = list(options.get_info_ships_6(option, AttachmentsTable6.number_crew).values())
+
+    mydata = text_collection.table_text_4
+    pups = PrettyTable(mydata)
+    for i in range(3):
+        pups.add_row([type_ship[i], ships[i], cost[i], specific_fuel[i], crew[i]])
+
+    print(text_collection.table_6)
+    print(pups)
+

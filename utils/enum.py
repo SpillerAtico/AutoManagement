@@ -8,8 +8,7 @@ class AttachmentsTable8:
     speed = '14'
     swim = '15'
     crew = '17'
-    d_sea = '19'
-    d_river = '20'
+    d_sea = '18'
     load_capacity = '21'
     gross_capacity = '22'
     net_capacity = '23'
@@ -23,5 +22,12 @@ class AttachmentsTable2:
     balance = 'C'
 
 
-cells_1 = ['9', '10', '11', '12', '13', '14', '15', '17', '19', '20', '21', '22', '23', '24', '25', '27']
+class AttachmentsTable6:
+    type_ship = 'A'
+    number_crew = 'C'
+    cost_price = 'D'
+    specific_fuel = 'E'
+
+
+cells_1 = ['9', '10', '11', '12', '13', '14', '15', '17', '18', '21', '22', '23', '24', '25', '27']
 cells_2 = ['A', 'C']
