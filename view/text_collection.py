@@ -1,5 +1,3 @@
-
-
 option = f'Введите свой вариант: '
 
 work_number = "Какую работу из (5) вывести? "
@@ -98,19 +96,27 @@ table_text_4 = [name_ship, project_number, cost_price, specific_fuel, number_cre
 structure_turn = "Структура расходов за оборот"
 revenue_turn = "Расчёт доходов за оборот"
 
-
 cost_maintaining_f = "Затраты судно без учета стоимости топлива в прямом направлении"  # Эокр.пр = Со * tкр.пр
 cost_maintaining_r = "Затраты на судно без учета стоимости топлива в обратном направлении"  # Эокр.пр = Со * tкр.пр
+abbrev_cost_maintaining = "Затраты на судно без стоимости топлива"
 
 crew_expenses_f = "Расходы содержания экипажа в прямом направлении"  # Ээккр.пр = mэк * 18 * tкрпр
 crew_expenses_r = "Расходы содержания экипажа в обратном направлении"  # Ээккр.пр = mэк * 18 * tкрпр
+abbrev_crew_expenses = "Расходы на экипажа"
 
 ship_fees = "Cудовые сборы"  # ∑Ссс
 
 fuel_costs = "Расходы на топливо в прямом (обратном) направлении"  # Эткр.пр = 700 * Рт * 712 * 0,00108
+abbrev_fuel_costs = "Расходы на топливо"
 
 consumption_f = "Расходы за прямое направление"  # Эокрпр + Ээккрпр + Эсскрпр + Эткрпр
 consumption_r = "Расходы за обратное направление"
 
 full_consumption = "Расходы за оборот"
+
+grey_color = "grey"
+
+value_money = "долл"
+weight = "bold"
+location = "center left"
 
