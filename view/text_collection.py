@@ -64,6 +64,9 @@ count_ship = "Кол-во судов данного проекта, nci"
 table_text_2 = [type_ship, project_number, book_value]
 table_text_3 = [project_number, book_value, count_ship, share_capital]
 
+calculation_carrying_capacity = "Расчёт провозной способности судов"
+calculation_duration_turn = "Расчёт продолжительности оборота cудов"
+
 ship_1 = 'Судно №1'
 ship_2 = 'Судно №2'
 ship_3 = 'Судно №3'
@@ -85,6 +88,8 @@ duration_turnover = "Продолжительность оборота, сут. 
 
 carrying_capacity = "Расчёт провозной способности судов различных проектов за эксплуатационный период"
 
+
+
 specifications_international = "Характеристики судов заграничного плавания"
 name_ship = "Название судна"
 cost_price = "Себестоимость содержания без топлива – С, долл./сут."
@@ -95,6 +100,7 @@ table_text_4 = [name_ship, project_number, cost_price, specific_fuel, number_cre
 
 structure_turn = "Структура расходов за оборот"
 revenue_turn = "Расчёт доходов за оборот"
+freight_rate = "Определение расчётной фрахтовой ставки, долл./т"
 
 cost_maintaining_f = "Затраты судно без учета стоимости топлива в прямом направлении"  # Эокр.пр = Со * tкр.пр
 cost_maintaining_r = "Затраты на судно без учета стоимости топлива в обратном направлении"  # Эокр.пр = Со * tкр.пр
@@ -119,4 +125,3 @@ grey_color = "grey"
 value_money = "долл"
 weight = "bold"
 location = "center left"
-

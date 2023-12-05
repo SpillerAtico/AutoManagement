@@ -14,6 +14,7 @@ def get_table_1(option: int):
     cell_option = options.get_table_options_3(option, sheet)
 
     your_ship = options.your_ships(option)
+
     cargo = options.get_cargos(cell_option, sheet)
     port = options.get_ports(option)
     distance = options.get_distance(cell_option, sheet)
@@ -89,10 +90,12 @@ def get_table_4(option: int, action):
     mydata = [text_collection.specifications] + [switcher.choose_def_calc(option, 1)[1][0]] + [
         switcher.choose_def_calc(option, 1)[1][1]] + [switcher.choose_def_calc(option, 1)[1][2]]
     pups = PrettyTable(mydata)
+
     if action == 'да':
         for i in range(2, 14):
             pups.add_row([switcher.choose_def_calc(option, i)[0]] + [switcher.choose_def_calc(option, i)[1][0]] + [
                 switcher.choose_def_calc(option, i)[1][1]] + [switcher.choose_def_calc(option, i)[1][2]])
+
         print(text_collection.table_5)
         print(pups)
 

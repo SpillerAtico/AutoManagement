@@ -22,4 +22,3 @@ if __name__ == '__main__':
 
         action = input('Выводим диаграммы? (да/нет): ')
         create_table.get_diagrams(your_option, action)
-
