@@ -121,9 +121,9 @@ value_money = "долл"
 weight = "bold"
 location = "center left"
 
-independent_expenses = "Доля независимых расходов"  # Y = Эооб/Эоб
-operating_costs = "Эксплуатационные расходы по судну, не зависящие от объёма перевозок"  # Энi = Эi * Y
-minimum_volume_transportation = "Минимальный объём перевозок грузов"  # Gmin = Эн/(fср – Sср  *  (1 – Y))
+independent_expenses = "Доля независимых расходов Y"  # Y = Эооб/Эоб
+operating_costs = "Эксплуатационные расходы по судну, не зависящие от объёма перевозок Эн"  # Эн = Эi * Y
+minimum_volume_transportation = "Минимальный объём перевозок грузов Gmin"  # Gmin = Эн/(fср – Sср  *  (1 – Y))
 carrying_capacity_navigation_period = "Провозная способность судна за навигационный период"  # Gi = nобi * (Qэпрi + Qэобрi)
 expenses_navigation_period = "Расходы по судну за навигационный период"  # Эперi = Sср * Gi долл
 revenue_transportation = "Доходы от перевозок, долл. по каждому судну"  # Дперi = Gперi * fсрi.

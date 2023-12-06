@@ -245,7 +245,8 @@ def find_carrying_capacity(option: int):
     return carrying_capacity, calculate
 
 
-def find_cost_maintaining(option: int):  # Затраты на судно без учета стоимости топлива в прямом направлении
+def find_cost_maintaining(
+        option: int):  # Затраты на судно без учета стоимости топлива в прямом направлении Эо кр = Со * tкр пр
     ships = options.your_ships(option)
 
     costs = options.get_info_ships_6(option, AttachmentsTable6.cost_price)
@@ -502,3 +503,63 @@ def find_expenses(option: int):  # расчет расходов Эпер.пр �
         for ship in ships}
 
     return expenses, calculate
+
+
+def find_independent_expenses(option: int):  # Y = Эооб / Эоб
+    ships = options.your_ships(option)
+
+    cost_maintaining = summa_cost_maintaining(option)  # Эо кр пр + Эо кр обр
+
+    full_consumption = find_full_consumption(option)[0]  # Эоб
+    independent_expenses = {ship: round(cost_maintaining.get(ship) / full_consumption.get(ship), 2)
+                            for ship in ships}
+
+    calculate = {
+        ship: f'{cost_maintaining.get(ship)} / {full_consumption.get(ship)} = {cost_maintaining.get(ship) / full_consumption.get(ship)}'
+        for ship in ships
+    }
+
+    return independent_expenses, calculate
+
+
+def find_operating_costs(option: int):  # Эн = Э пер * Y
+    ships = options.your_ships(option)
+
+    expenses = find_expenses(option)[0]  # Эпер
+    independent_expenses = find_independent_expenses(option)[0]  # Y = Эооб / Эоб
+
+    operating_costs = {
+        ship: round(expenses.get(ship)[2] * independent_expenses.get(ship), 2)
+        for ship in ships
+    }
+
+    calculate = {
+        ship: f'{expenses.get(ship)[2]} * {independent_expenses.get(ship)} = {expenses.get(ship)[2] * independent_expenses.get(ship)}'
+        for ship in ships
+    }
+
+    return operating_costs, calculate
+
+
+def find_min_volume_transportation(option: int):  # Gmin = Эн/(fср – Sср  *  (1 – Y))
+    ships = options.your_ships(option)
+
+    operating_costs = find_operating_costs(option)[0]  # Эн = Эпер * Y
+    independent_expenses = find_independent_expenses(option)[0]  # Y = Эооб / Эоб
+
+    freight_rate = find_freight_rate(option)[0]  # fср
+    cost_cargo_trans = find_cost_cargo_trans(option)[0]  # Sср
+
+    volume_transportation = {
+        ship:
+            round(operating_costs.get(ship) / (freight_rate.get(ship)[2] - cost_cargo_trans.get(ship)[2] * (
+                    1 - independent_expenses.get(ship))), 2)
+        for ship in ships
+    }
+
+    calculate = {
+        ship: f'{operating_costs.get(ship)} / ({freight_rate.get(ship)[2]} - {cost_cargo_trans.get(ship)[2]} * ({1} - {independent_expenses.get(ship)})) = {operating_costs.get(ship) / (freight_rate.get(ship)[2] - cost_cargo_trans.get(ship)[2] * (1 - independent_expenses.get(ship)))}'
+        for ship in ships
+    }
+
+    return volume_transportation, calculate
