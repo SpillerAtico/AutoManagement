@@ -5,7 +5,7 @@ from utils.enums import cells_1, AttachmentsTable8, AttachmentsTable2, Attachmen
 from prettytable import PrettyTable
 from . import calculations
 from utils import switcher
-from .additional_stuff import diagramm_create, analysis_create
+from .additional_stuff import diagramm_create, analysis_create, calculations_structure_create
 
 
 def get_table_1(option: int):
@@ -87,22 +87,28 @@ def get_table_3(option: int):
 
 
 def get_table_4(option: int, action):
-    mydata = [text_collection.specifications] + [switcher.choose_def_calc(option, 1)[1][0]] + [
-        switcher.choose_def_calc(option, 1)[1][1]] + [switcher.choose_def_calc(option, 1)[1][2]]
+    ship_1, ship_2, ship_3 = options.your_ships(option)
+
+    mydata = [text_collection.specifications, ship_1, ship_2, ship_3]
     pups = PrettyTable(mydata)
 
-    if action == 'да':
+    if action == 'нет':
         for i in range(2, 14):
-            pups.add_row([switcher.choose_def_calc(option, i)[0]] + [switcher.choose_def_calc(option, i)[1][0]] + [
-                switcher.choose_def_calc(option, i)[1][1]] + [switcher.choose_def_calc(option, i)[1][2]])
-
+            pups.add_row([switcher.choose_def_value(option, i, ship_1)[0],
+                          switcher.choose_def_value(option, i, ship_1)[1],
+                          switcher.choose_def_value(option, i, ship_2)[1],
+                          switcher.choose_def_value(option, i, ship_3)[1]])
+        print()
         print(text_collection.table_5)
         print(pups)
 
-    elif action == 'нет':
+    elif action == 'да':
         for i in range(2, 14):
-            pups.add_row([switcher.choose_def_calc(option, i)[0]] + [switcher.choose_def_value(option, i)[1][0]] + [
-                switcher.choose_def_value(option, i)[1][1]] + [switcher.choose_def_value(option, i)[1][2]])
+            pups.add_row([switcher.choose_def_value(option, i, ship_1)[0],
+                          switcher.choose_def_value(option, i, ship_1)[1],
+                          switcher.choose_def_value(option, i, ship_2)[1],
+                          switcher.choose_def_value(option, i, ship_3)[1]])
+        print()
         print(text_collection.table_5)
         print(pups)
 
@@ -111,20 +117,18 @@ def get_table_4(option: int, action):
 
 
 def get_carrying_capacity(option: int, action):
-    mydata = [switcher.choose_def_calc(option, 1)[1][0]] + [switcher.choose_def_calc(option, 1)[1][1]] + [
-        switcher.choose_def_calc(option, 1)[1][2]]
+    ship_1, ship_2, ship_3 = options.your_ships(option)
+
+    mydata = [ship_1, ship_2, ship_3]
     pups = PrettyTable(mydata)
 
-    if action == 'да':
-        pups.add_row([switcher.choose_def_calc(option, 14)[1][0]] + [switcher.choose_def_calc(option, 14)[1][1]] + [
-            switcher.choose_def_calc(option, 14)[1][2]])
-        print(switcher.choose_def_value(option, 14)[0])
-        print(pups)
+    if action == 'нет':
+        pups.add_row([switcher.choose_def_value(option, 14, ship_1)[1],
+                      switcher.choose_def_value(option, 14, ship_2)[1],
+                      switcher.choose_def_value(option, 14, ship_3)[1]])
 
-    elif action == 'нет':
-        pups.add_row([switcher.choose_def_value(option, 14)[1][0]] + [switcher.choose_def_value(option, 14)[1][1]] + [
-            switcher.choose_def_value(option, 14)[1][2]])
-        print(switcher.choose_def_value(option, 14)[0])
+        print()
+        print(switcher.choose_def_value(option, 14, ship_1)[0])
         print(pups)
 
     else:
@@ -132,41 +136,49 @@ def get_carrying_capacity(option: int, action):
 
 
 def get_table_5(option: int):
-    ships = list(options.get_info_ships_6(option, AttachmentsTable6.type_ship).keys())
-    type_ship = list(options.get_info_ships_6(option, AttachmentsTable6.type_ship).values())
-    cost = list(options.get_info_ships_6(option, AttachmentsTable6.cost_price).values())
-    specific_fuel = list(options.get_info_ships_6(option, AttachmentsTable6.specific_fuel).values())
-    crew = list(options.get_info_ships_6(option, AttachmentsTable6.number_crew).values())
+    ships = options.your_ships(option)
+
+    type_ship = options.get_info_ships_6(option, AttachmentsTable6.type_ship)
+    cost = options.get_info_ships_6(option, AttachmentsTable6.cost_price)
+    specific_fuel = options.get_info_ships_6(option, AttachmentsTable6.specific_fuel)
+    crew = options.get_info_ships_6(option, AttachmentsTable6.number_crew)
 
     mydata = text_collection.table_text_4
     pups = PrettyTable(mydata)
-    for i in range(3):
-        pups.add_row([type_ship[i], ships[i], cost[i], specific_fuel[i], crew[i]])
+    for ship in ships:
+        pups.add_row([type_ship.get(ship), ship, cost.get(ship), specific_fuel.get(ship), crew.get(ship)])
 
     print(text_collection.table_6)
     print(pups)
 
 
 def get_structure_turn(option: int, action):
-    mydata = [text_collection.specifications] + [switcher.choose_def_calc(option, 1)[1][0]] + [
-        switcher.choose_def_calc(option, 1)[1][1]] + [switcher.choose_def_calc(option, 1)[1][2]]
+    ship_1, ship_2, ship_3 = options.your_ships(option)
+
+    mydata = [text_collection.specifications] + [ship_1, ship_2, ship_3]
     pups = PrettyTable(mydata)
 
     if action == "нет":
         for i in range(15, 24):
-            pups.add_row([switcher.choose_def_value(option, i)[0]] + [switcher.choose_def_value(option, i)[1][0]] + [
-                switcher.choose_def_value(option, i)[1][1]] + [switcher.choose_def_value(option, i)[1][2]])
+            pups.add_row([switcher.choose_def_value(option, i, ship_1)[0],
+                          switcher.choose_def_value(option, i, ship_1)[1],
+                          switcher.choose_def_value(option, i, ship_2)[1],
+                          switcher.choose_def_value(option, i, ship_3)[1]])
 
+        print(text_collection.structure_turn)
+        print(pups)
     elif action == "да":
         for i in range(15, 24):
-            pups.add_row([switcher.choose_def_value(option, i)[0]] + [switcher.choose_def_value(option, i)[1][0]] + [
-                switcher.choose_def_value(option, i)[1][1]] + [switcher.choose_def_value(option, i)[1][2]])
-        calculations.calculation_structure_turn(option)  # вывод вычислений
+            pups.add_row([switcher.choose_def_value(option, i, ship_1)[0],
+                          switcher.choose_def_value(option, i, ship_1)[1],
+                          switcher.choose_def_value(option, i, ship_2)[1],
+                          switcher.choose_def_value(option, i, ship_3)[1]])
+        print(text_collection.structure_turn)
+        print(pups)
+        calculations_structure_create.calculation_structure_1(option)  # вывод вычислений
+        calculations_structure_create.calculation_structure_2(option)
     else:
         print('Только да или нет')
-
-    print(text_collection.structure_turn)
-    print(pups)
 
 
 def get_analysis(option: int, operand):

@@ -180,9 +180,6 @@ def find_duration_stay(option: int) -> tuple:  # Продолжительнос�
     return duration_stay, calculate
 
 
-print(find_duration_stay(3)[1])
-
-
 def find_flight_time(option: int):  # Время рейса: tкр
     ships = options.your_ships(option)
 
@@ -231,42 +228,39 @@ def find_period_operation(option: int):  # nобi = Тэ/tобi
 
 
 def find_carrying_capacity(option: int):
-    ship_count = list(options.get_info_ships(option, AttachmentsTable8.ship_count).values())
-    ships = list(options.get_info_ships(option, AttachmentsTable8.ship_count).keys())
+    ships = options.your_ships(option)
 
-    period_operation = list(find_period_operation(option)[0].values())
+    period_operation = find_period_operation(option)[0]
+    rate_f, rate_r = find_rate_load(option)[0], find_rate_load(option)[1]
+    ship_count = options.get_info_ships(option, AttachmentsTable8.ship_count)
 
-    rate_f = list(find_rate_load(option)[0].values())
-    rate_r = list(find_rate_load(option)[1].values())
+    carrying_capacity = {ship: int(ship_count.get(ship)) * int(period_operation.get(ship)) * (
+            round(int(rate_f.get(ship))) + round(int(rate_r.get(ship))))
+                         for ship in ships}
 
-    carrying_capacity = {
-        ships[i]: int(ship_count[i]) * int(period_operation[i]) * (round(int(rate_f[i])) + round(int(rate_r[i])))
-        for i in range(3)}
-
-    calculate = {ships[
-                     i]: f'{int(ship_count[i])} * {int(period_operation[i])} * ({round(int(rate_f[i]))} + {round(int(rate_r[i]))}) = {int(ship_count[i]) * int(period_operation[i]) * (round(int(rate_f[i])) + round(int(rate_r[i])))}'
-                 for i in range(3)}
+    calculate = {
+        ship: f'{int(ship_count.get(ship))} * {int(period_operation.get(ship))} * ({round(int(rate_f.get(ship)))} + {int(ship_count.get(ship)) * int(period_operation.get(ship)) * (round(int(rate_f.get(ship))) + round(int(rate_r.get(ship))))}'
+        for ship in ships}
 
     return carrying_capacity, calculate
 
 
-def find_cost_maintaining(option: int):
+def find_cost_maintaining(option: int):  # Затраты на судно без учета стоимости топлива в прямом направлении
     ships = options.your_ships(option)
 
     costs = options.get_info_ships_6(option, AttachmentsTable6.cost_price)
     times = find_flight_time(option)[0]
 
-    cost_maintaining_f = {ship: round(float(costs.get(ship)) * float(times.get(ship)[0]), 1) for ship in ships}
-    cost_maintaining_r = {ship: round(float(costs.get(ship)) * float(times.get(ship)[1]), 1) for ship in ships}
+    cost_maintaining = {ship: (round(float(costs.get(ship)) * float(times.get(ship)[0]), 1),
+                               round(float(costs.get(ship)) * float(times.get(ship)[1]), 1)) for ship in ships}
 
-    calculate_f = {
-        ship: f'{float(costs.get(ship))} * {float(times.get(ship)[0])} = {float(costs.get(ship)) * float(times.get(ship)[0])}'
-        for ship in ships}
-    calculate_r = {
-        ship: f'{float(costs.get(ship))} * {float(times.get(ship)[1])} = {float(costs.get(ship)) * float(times.get(ship)[1])}'
+    calculate = {
+        ship: (
+            f'{float(costs.get(ship))} * {float(times.get(ship)[0])} = {float(costs.get(ship)) * float(times.get(ship)[0])}',
+            f'{float(costs.get(ship))} * {float(times.get(ship)[1])} = {float(costs.get(ship)) * float(times.get(ship)[1])}')
         for ship in ships}
 
-    return cost_maintaining_f, cost_maintaining_r, calculate_f, calculate_r
+    return cost_maintaining, calculate
 
 
 def find_crew_expenses(option: int):
@@ -275,17 +269,17 @@ def find_crew_expenses(option: int):
     number_crew = options.get_info_ships_6(option, AttachmentsTable6.number_crew)
     times = find_flight_time(option)[0]
 
-    crew_expenses_f = {ship: round(float(number_crew.get(ship)) * 18 * float(times.get(ship)[0]), 1) for ship in ships}
-    crew_expenses_r = {ship: round(float(number_crew.get(ship)) * 18 * float(times.get(ship)[1]), 1) for ship in ships}
+    crew_expenses = {ship: (round(float(number_crew.get(ship)) * 18 * float(times.get(ship)[0]), 1),
+                            round(float(number_crew.get(ship)) * 18 * float(times.get(ship)[1]), 1))
+                     for ship in ships}
 
-    calculate_f = {
-        ship: f'{float(number_crew.get(ship))} * 18 * {float(times.get(ship)[0])} = {float(number_crew.get(ship)) * 18 * float(times.get(ship)[0])}'
-        for ship in ships}
-    calculate_r = {
-        ship: f'{float(number_crew.get(ship))} * 18 * {float(times.get(ship)[1])} = {float(number_crew.get(ship)) * 18 * float(times.get(ship)[1])}'
+    calculate = {
+        ship: (
+            f'{float(number_crew.get(ship))} * 18 * {float(times.get(ship)[0])} = {float(number_crew.get(ship)) * 18 * float(times.get(ship)[0])}',
+            f'{float(number_crew.get(ship))} * 18 * {float(times.get(ship)[1])} = {float(number_crew.get(ship)) * 18 * float(times.get(ship)[1])}')
         for ship in ships}
 
-    return crew_expenses_f, crew_expenses_r, calculate_f, calculate_r
+    return crew_expenses, calculate
 
 
 def find_ship_fees(option: int):
@@ -300,7 +294,7 @@ def find_ship_fees(option: int):
         return ship_fees, calculate
     elif len(fees.get(ships[0])) == 2:
         ship_fees = {ship: fees.get(ship)[0] + fees.get(ship)[1] for ship in ships}
-        calculate = {ship: {f'{fees.get(ship)[0]} + {fees.get(ship)[1]} = {fees.get(ship)[0] + fees.get(ship)[1]}'}
+        calculate = {ship: f'{fees.get(ship)[0]} + {fees.get(ship)[1]} = {fees.get(ship)[0] + fees.get(ship)[1]}'
                      for ship in ships}
         return ship_fees, calculate
 
@@ -320,73 +314,34 @@ def find_fuel_costs(option: int):
 def find_consumption(option: int):
     ships = options.your_ships(option)
 
-    one_f, one_r = find_cost_maintaining(option)[0], find_cost_maintaining(option)[1]
-    two_f, two_r = find_crew_expenses(option)[0], find_crew_expenses(option)[1]
+    one = find_cost_maintaining(option)[0]
+    two = find_crew_expenses(option)[0]
     three = find_ship_fees(option)[0]
     four = find_fuel_costs(option)[0]
 
-    consumption_f = {ship: round(one_f.get(ship) + two_f.get(ship) + three.get(ship) + four.get(ship))
-                     for ship in ships}
-    consumption_r = {ship: round(one_r.get(ship) + two_r.get(ship) + three.get(ship) + four.get(ship))
-                     for ship in ships}
-    calculate_f = {
-        ship: f'{one_f.get(ship)} + {two_f.get(ship)} + {three.get(ship)} + {four.get(ship)} = {one_f.get(ship) + two_f.get(ship) + three.get(ship) + four.get(ship)}'
-        for ship in ships}
-    calculate_r = {
-        ship: f'{one_r.get(ship)} + {two_r.get(ship)} + {three.get(ship)} + {four.get(ship)} = {one_r.get(ship) + two_r.get(ship) + three.get(ship) + four.get(ship)}'
+    consumption = {ship: (round(one.get(ship)[0] + two.get(ship)[0] + three.get(ship) + four.get(ship)),
+                          round(one.get(ship)[1] + two.get(ship)[1] + three.get(ship) + four.get(ship)))
+                   for ship in ships}
+
+    calculate = {
+        ship: (
+            f'{one.get(ship)[0]} + {two.get(ship)[0]} + {three.get(ship)} + {four.get(ship)} = {one.get(ship)[0] + two.get(ship)[0] + three.get(ship) + four.get(ship)}',
+            f'{one.get(ship)[1]} + {two.get(ship)[1]} + {three.get(ship)} + {four.get(ship)} = {one.get(ship)[1] + two.get(ship)[1] + three.get(ship) + four.get(ship)}')
         for ship in ships}
 
-    return consumption_f, consumption_r, calculate_f, calculate_r
+    return consumption, calculate
 
 
 def find_full_consumption(option: int):
     ships = options.your_ships(option)
-    one_f, one_r = find_consumption(option)[0], find_consumption(option)[1]
+    one = find_consumption(option)[0]
 
-    full_consumption = {ship: one_f.get(ship) + one_r.get(ship) for ship in ships}
+    full_consumption = {ship: round(one.get(ship)[0] + one.get(ship)[1], 2) for ship in ships}
     calculate = {
-        ship: f'{float(one_f.get(ship))} + {float(one_r.get(ship))} = {float(one_f.get(ship) + one_r.get(ship))}'
+        ship: f'{float(one.get(ship)[0])} + {float(one.get(ship)[1])} = {float(one.get(ship)[0] + one.get(ship)[1])}'
         for ship in ships}
 
     return full_consumption, calculate
-
-
-def calculation_structure_turn(option: int):
-    ship_1, ship_2, ship_3 = options.your_ships(option)
-
-    cost_maintaining_f = find_cost_maintaining(option)[2]
-    cost_maintaining_r = find_cost_maintaining(option)[3]
-    crew_expenses_f = find_crew_expenses(option)[2]
-    crew_expenses_r = find_crew_expenses(option)[3]
-    ship_fees = find_ship_fees(option)[1]
-    fuel_costs = find_fuel_costs(option)[1]
-    consumption_f = find_consumption(option)[2]
-    consumption_r = find_consumption(option)[3]
-    full_consumption = find_full_consumption(option)[1]
-
-    print(
-        f'{text_collection.cost_maintaining_f}\n{cost_maintaining_f.get(ship_1)}\n{cost_maintaining_f.get(ship_2)}\n{cost_maintaining_f.get(ship_3)}\n')
-    print(
-        f'{text_collection.cost_maintaining_r}\n{cost_maintaining_r.get(ship_1)}\n{cost_maintaining_r.get(ship_2)}\n{cost_maintaining_r.get(ship_3)}\n')
-    print(
-        f'{text_collection.crew_expenses_f}\n{crew_expenses_f.get(ship_1)}\n{crew_expenses_f.get(ship_2)}\n{crew_expenses_f.get(ship_3)}\n')
-    print(
-        f'{text_collection.crew_expenses_r}\n{crew_expenses_r.get(ship_1)}\n{crew_expenses_r.get(ship_2)}\n{crew_expenses_r.get(ship_3)}\n')
-    print(f'{text_collection.ship_fees}\n{ship_fees.get(ship_1)}\n{ship_fees.get(ship_2)}\n{ship_fees.get(ship_3)}\n')
-    print(
-        f'{text_collection.fuel_costs}\n{fuel_costs.get(ship_1)}\n{fuel_costs.get(ship_2)}\n{fuel_costs.get(ship_3)}\n')
-    print(
-        f'{text_collection.consumption_f}\n{consumption_f.get(ship_1)}\n{consumption_f.get(ship_2)}\n{consumption_f.get(ship_3)}\n')
-    print(
-        f'{text_collection.consumption_r}\n{consumption_r.get(ship_1)}\n{consumption_r.get(ship_2)}\n{consumption_r.get(ship_3)}\n')
-    print(
-        f'{text_collection.full_consumption}\n{full_consumption.get(ship_1)}\n{full_consumption.get(ship_2)}\n{full_consumption.get(ship_3)}\n')
-
-    return ''
-
-
-def calculations_structure_turn(option: int):
-    return
 
 
 def summa_cost_maintaining(option: int):
@@ -395,7 +350,7 @@ def summa_cost_maintaining(option: int):
     cost_maintaining = {}
     for ship in ships:
         cost_maintaining[ship] = (
-            round(find_cost_maintaining(option)[0].get(ship) + find_cost_maintaining(option)[1].get(ship), 1))
+            round(find_cost_maintaining(option)[0].get(ship)[0] + find_cost_maintaining(option)[0].get(ship)[1], 1))
 
     return cost_maintaining
 
@@ -406,16 +361,15 @@ def summa_crew_expenses(option: int):
     crew_expenses = {}
     for ship in ships:
         crew_expenses[ship] = (
-            round(find_crew_expenses(option)[0].get(ship) + find_crew_expenses(option)[1].get(ship), 1))
+            round(find_crew_expenses(option)[0].get(ship)[0] + find_crew_expenses(option)[0].get(ship)[1], 1))
 
     return crew_expenses
 
 
 def find_max_crew_expenses_ship(ships, option):
-    crew_expenses_f = find_crew_expenses(option)[0]
-    crew_expenses_r = find_crew_expenses(option)[1]
+    crew_expenses = find_crew_expenses(option)[0]
 
-    crew_expenses = {ship: crew_expenses_f.get(ship) + crew_expenses_r.get(ship) for ship in ships}
+    crew_expenses = {ship: crew_expenses.get(ship)[0] + crew_expenses.get(ship)[1] for ship in ships}
 
     return crew_expenses
 
@@ -436,20 +390,17 @@ def find_min_load_capacity(option):
 
 
 def find_revenue_turn(option: int):  # Расчёт доходов за оборот dоб dкр.пр dкр.обр
-    rentable = 1.40
+    rentable = 1.30
     ships = options.your_ships(option)
 
-    consumption = find_consumption(option)
+    consumption = find_consumption(option)[0]
 
-    consumption_f = consumption[0]
-    consumption_r = consumption[1]
-
-    revenue_turn = {ship: (round(consumption_f.get(ship) * rentable, 1),
-                           round(consumption_r.get(ship) * rentable, 1),
-                           round(consumption_f.get(ship) * rentable + consumption_r.get(ship) * rentable, 1))
+    revenue_turn = {ship: (round(consumption.get(ship)[0] * rentable, 1),
+                           round(consumption.get(ship)[1] * rentable, 1),
+                           round(consumption.get(ship)[0] * rentable + consumption.get(ship)[1] * rentable, 1))
                     for ship in ships}
     calculate = {
-        ship: f'{consumption_f.get(ship)} * {rentable} + {consumption_r.get(ship)} * {rentable} = {consumption_f.get(ship) * rentable + consumption_r.get(ship) * rentable}'
+        ship: f'{consumption.get(ship)[0]} * {rentable} + {consumption.get(ship)[1]} * {rentable} = {consumption.get(ship)[0] * rentable + consumption.get(ship)[1] * rentable}'
         for ship in ships}
 
     return revenue_turn, calculate
@@ -459,23 +410,22 @@ def find_cost_cargo_trans(option: int):  # Определение себесто
     ships = options.your_ships(option)
 
     rate_load = find_rate_load(option)
-    consumption = find_consumption(option)
+    consumptions = find_consumption(option)[0]
     full_consumption = find_full_consumption(option)[0]
 
     rate_load_f, rate_load_r = rate_load[0], rate_load[1]
-    consumption_f, consumption_r = consumption[0], consumption[1]
 
-    cost_trans = {ship: (round(consumption_f.get(ship) / float(rate_load_f.get(ship)), 1),
-                         round(consumption_r.get(ship) / float(rate_load_r.get(ship)), 1),
+    cost_trans = {ship: (round(consumptions.get(ship)[0] / float(rate_load_f.get(ship)), 1),
+                         round(consumptions.get(ship)[1] / float(rate_load_r.get(ship)), 1),
                          round(
                              full_consumption.get(ship) / (float(rate_load_f.get(ship)) + float(rate_load_r.get(ship))),
                              1))
                   for ship in ships}
 
     calculate = {ship: (
-        f'{consumption_f.get(ship)} / {float(rate_load_f.get(ship))} = {consumption_f.get(ship) / float(rate_load_f.get(ship))}',
-        f'{consumption_r.get(ship)} / {float(rate_load_r.get(ship))} = {consumption_r.get(ship) / float(rate_load_r.get(ship))}',
-        f'{full_consumption.get(ship)} / {float(rate_load_f.get(ship))} + {float(rate_load_r.get(ship))} = {full_consumption.get(ship) / (float(rate_load_f.get(ship)) + float(rate_load_r.get(ship)))}')
+        f'{consumptions.get(ship)[0]} / {float(rate_load_f.get(ship))} = {consumptions.get(ship)[0] / float(rate_load_f.get(ship))}',
+        f'{consumptions.get(ship)[1]} / {float(rate_load_r.get(ship))} = {consumptions.get(ship)[1] / float(rate_load_r.get(ship))}',
+        f'{full_consumption.get(ship)} / ({float(rate_load_f.get(ship))} + {float(rate_load_r.get(ship))}) = {full_consumption.get(ship) / (float(rate_load_f.get(ship)) + float(rate_load_r.get(ship)))}')
         for ship in ships}
 
     return cost_trans, calculate

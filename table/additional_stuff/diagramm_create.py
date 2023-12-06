@@ -48,7 +48,7 @@ def create_diagram(ship, cost_maintaining, crew_expenses, ship_fees, fuel_costs)
     ax.set_title(ship)
 
     plt.show()
-    return ''
+    return
 
 
 def get_diagrams(option: int):

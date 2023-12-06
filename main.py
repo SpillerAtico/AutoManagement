@@ -1,4 +1,4 @@
-from table import create_table
+from table import create_table, calculations
 from config import your_option, work_number
 
 if __name__ == '__main__':
