@@ -1,15 +1,21 @@
 from settings import options
 from settings.options import workbook, sheets
-from utils.enums import AttachmentsTable8, AttachmentsTable6
-from view import text_collection
+from utils.enums import AttachmentsTable8, AttachmentsTable6, AttachmentsTable2
 
 
-def share_capital(balance_sell, ship_count, option):
-    ships = list(options.get_info_ships(option, AttachmentsTable8.ship_count).keys())
+def find_share_capital(option: int):
+    ships = options.your_ships(option)
 
-    capital = {ships[i]: int(balance_sell) * int(ship_count) for i in range(3)}
-    value = int(balance_sell) * int(ship_count)
-    return f'{int(balance_sell)} * {ship_count} = {value}', capital
+    ship_count = options.get_info_ships(option, AttachmentsTable8.ship_count)
+    balance = options.get_info_table_2(option, AttachmentsTable2.balance)
+
+    capital = {ship: int(balance.get(ship)) * int(ship_count.get(ship)) for ship in ships}
+    calculate = {
+        ship: f'{int(balance.get(ship))} * {int(ship_count.get(ship))} = {int(balance.get(ship)) * int(ship_count.get(ship))}'
+        for ship in ships
+    }
+
+    return capital, calculate
 
 
 def find_volume(option: int):
@@ -58,7 +64,7 @@ def find_specific_capacity(option: int) -> tuple:  # Удельная грузо
     specific_capacity = {ship: round(float(hold_capacity_val.get(ship)) / float(load_capacity_val.get(ship)), 1) for
                          ship in ships}
     calculate = {
-        ship: f'{ship} / {hold_capacity_val.get(ship)} = {float(hold_capacity_val.get(ship)) / float(load_capacity_val.get(ship))}'
+        ship: f'{float(hold_capacity_val.get(ship))} / {hold_capacity_val.get(ship)} = {float(hold_capacity_val.get(ship)) / float(load_capacity_val.get(ship))}'
         for ship in ships}
 
     return specific_capacity, calculate
@@ -162,7 +168,7 @@ def find_times_with_cargo(option: int) -> tuple:  # Время хода с гр�
     return times, calculate
 
 
-def find_duration_stay(option: int) -> tuple:  # Продолжительность стоянки судна в морском порту, ч
+def find_duration_stay(option: int) -> dict:  # Продолжительность стоянки судна в морском порту, ч
     ships = options.your_ships(option)
 
     rate_f = find_rate_load(option)[0]
@@ -173,17 +179,13 @@ def find_duration_stay(option: int) -> tuple:  # Продолжительнос�
     duration_stay = {ship: (round(float(rate_f.get(ship)) / float(volume_f), 2),
                             round(float(rate_r.get(ship)) / float(volume_r), 2)) for ship in ships}
 
-    calculate = {ship: (f'{float(rate_f.get(ship))} / {float(volume_f)} = {float(rate_f.get(ship)) / float(volume_f)}',
-                        f'{float(rate_r.get(ship))} / {float(volume_r)} = {float(rate_r.get(ship)) / float(volume_r)}')
-                 for ship in ships}
-
-    return duration_stay, calculate
+    return duration_stay
 
 
 def find_flight_time(option: int):  # Время рейса: tкр
     ships = options.your_ships(option)
 
-    duration_stay = find_duration_stay(option)[0]
+    duration_stay = find_duration_stay(option)
 
     time_cargo = find_times_with_cargo(option)[0]
 
@@ -220,7 +222,7 @@ def find_period_operation(option: int):  # nобi = Тэ/tобi
     duration_turn = find_duration_turn(option)[0]
     time = 365 * 3
 
-    period_operation = {ship: time / duration_turn.get(ship) for ship in ships}
+    period_operation = {ship: round(time / duration_turn.get(ship), 2) for ship in ships}
     calculate = {ship: f'{time} / {duration_turn.get(ship)} = {time / duration_turn.get(ship)}'
                  for ship in ships}
 
@@ -239,7 +241,7 @@ def find_carrying_capacity(option: int):
                          for ship in ships}
 
     calculate = {
-        ship: f'{int(ship_count.get(ship))} * {int(period_operation.get(ship))} * ({round(int(rate_f.get(ship)))} + {int(ship_count.get(ship)) * int(period_operation.get(ship)) * (round(int(rate_f.get(ship))) + round(int(rate_r.get(ship))))}'
+        ship: f'{int(ship_count.get(ship))} * {int(period_operation.get(ship))} * ({int(rate_f.get(ship))} + {int(rate_r.get(ship))}) = {int(ship_count.get(ship)) * int(period_operation.get(ship)) * (int(rate_f.get(ship)) + int(rate_r.get(ship)))}'
         for ship in ships}
 
     return carrying_capacity, calculate
@@ -563,3 +565,98 @@ def find_min_volume_transportation(option: int):  # Gmin = Эн/(fср – Sср
     }
 
     return volume_transportation, calculate
+
+
+def find_capacity_navigation_period(option: int):  # Gi = nоб * (Qэпр + Qэобр)
+    ships = options.your_ships(option)
+
+    period_operation = find_period_operation(option)[0]  # nоб
+    rate_load = find_rate_load(option)
+
+    rate_load_f, rate_load_r = rate_load[0], rate_load[1]  # Qэпр & Qэобр
+
+    capacity_navigation_period = {
+        ship: round(period_operation.get(ship) * (float(rate_load[0].get(ship)) + float(rate_load[1].get(ship))), 2)
+        for ship in ships
+    }
+
+    calculate = {
+        ship: f'{period_operation.get(ship)} * ({rate_load[0].get(ship)} + {rate_load[1].get(ship)}) = {period_operation.get(ship) * (float(rate_load[0].get(ship)) + float(rate_load[1].get(ship)))}'
+        for ship in ships
+    }
+
+    return capacity_navigation_period, calculate
+
+
+def find_expenses_nav_period(option: int):  # Эперi = Sср * Gi долл
+    ships = options.your_ships(option)
+
+    cost_cargo_trans = find_cost_cargo_trans(option)[0]  # Sср
+    navigation_period = find_capacity_navigation_period(option)[0]  # Gi = nоб * (Qэпр + Qэобр)
+
+    expenses_nav_period = {
+        ship: round(cost_cargo_trans.get(ship)[2] * navigation_period.get(ship), 2)
+        for ship in ships
+    }
+
+    calculate = {
+        ship: f'{cost_cargo_trans.get(ship)[2]} * {navigation_period.get(ship)} = {cost_cargo_trans.get(ship)[2] * navigation_period.get(ship)}'
+        for ship in ships
+
+    }
+    return expenses_nav_period, calculate
+
+
+def find_revenue_transportation(option: int):  # Дперi = Gi * fсрi
+    ships = options.your_ships(option)
+
+    navigation_period = find_capacity_navigation_period(option)[0]  # Gi = nоб * (Qэпр + Qэобр)
+    freight_rate = find_freight_rate(option)[0]  # fср
+
+    revenue_transportation = {
+        ship: round(navigation_period.get(ship) * freight_rate.get(ship)[2], 2)
+        for ship in ships
+    }
+
+    calculate = {
+        ship: f'{navigation_period.get(ship)} * {freight_rate.get(ship)[2]} = {navigation_period.get(ship) * freight_rate.get(ship)[2]}'
+        for ship in ships
+    }
+
+    return revenue_transportation, calculate
+
+
+def find_factor_annual_capacity(option: int):  # Ки.с. = Gmin/Gi.
+    ships = options.your_ships(option)
+
+    min_volume_transportation = find_min_volume_transportation(option)[0]  # Gmin
+    navigation_period = find_capacity_navigation_period(option)[0]  # Gi = nоб * (Qэпр + Qэобр)
+
+    factor_annual_capacity = {
+        ship: round(min_volume_transportation.get(ship) / navigation_period.get(ship), 2)
+        for ship in ships
+    }
+    calculate = {
+        ship: f'{min_volume_transportation.get(ship)} / {navigation_period.get(ship)} = {min_volume_transportation.get(ship) / navigation_period.get(ship)}'
+        for ship in ships
+    }
+    return factor_annual_capacity, calculate
+
+
+def find_minimum_income(option: int):  # Дmin = Gmin * fсрi
+    ships = options.your_ships(option)
+
+    min_volume_transportation = find_min_volume_transportation(option)[0]  # Gmin
+    freight_rate = find_freight_rate(option)[0]  # fср
+
+    minimum_income = {
+        ship: round(min_volume_transportation.get(ship) * freight_rate.get(ship)[2], 2)
+        for ship in ships
+    }
+
+    calculate = {
+        ship: f'{min_volume_transportation.get(ship)} * {freight_rate.get(ship)[2]} = {min_volume_transportation.get(ship) * freight_rate.get(ship)[2]}'
+        for ship in ships
+    }
+
+    return minimum_income, calculate

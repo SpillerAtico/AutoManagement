@@ -48,7 +48,6 @@ def create_diagram(ship, cost_maintaining, crew_expenses, ship_fees, fuel_costs)
     ax.set_title(ship)
 
     plt.show()
-    return
 
 
 def get_diagrams(option: int):
@@ -60,4 +59,3 @@ def get_diagrams(option: int):
 
     for i in range(3):
         print(create_diagram(ship[i], cost_maintaining[i], crew_expenses[i], ship_fees[i], fuel_costs[i]))
-    return ''

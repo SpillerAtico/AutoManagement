@@ -2,7 +2,7 @@ import openpyxl
 from typing import List
 from config import attachments, your_option
 from view import text_collection
-from utils.enums import AttachmentsTable8, AttachmentsTable6
+from utils.enums import AttachmentsTable8, AttachmentsTable6, AttachmentsTable2
 
 workbook = openpyxl.load_workbook(attachments)
 sheets = openpyxl.load_workbook(attachments).sheetnames
@@ -126,6 +126,20 @@ def get_info_ships(option: int, enum) -> dict:
 
     ships = list(ship_cells.values())
     data = {str(sheet[ship].value): str(sheet[ship.replace('4', enum)].value) for ship in ships}
+
+    return data
+
+
+def get_info_table_2(option: int, enum) -> dict:
+    workbook.active = workbook[sheets[1]]  # Приложение 2
+    sheet = workbook.active
+
+    ships = your_ships(option)
+
+    options = {str(cell.value): str(cell.coordinate) for content in sheet['B6':'B23'] for cell in content if
+               str(cell.value) in ships}
+
+    data = {ship: str(sheet[options.get(ship).replace('B', enum)].value) for ship in ships}
 
     return data
 
