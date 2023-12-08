@@ -235,3 +235,4 @@ def work_4(option: int, action):
         calculations_structure_create.calculation_structure_3(option)
     else:
         print(text_collection.only_yes_and_no)
+

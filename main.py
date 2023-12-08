@@ -1,9 +1,32 @@
-from table import create_table, calculations
+from table import create_table
 from config import your_option, work_number
+from view import text_collection
 
 if __name__ == '__main__':
-    if work_number == 1:
+    if work_number == 0:
+        create_table.get_table_1(your_option)
+        create_table.get_table_2(your_option)
+        action = text_collection.yes
+        create_table.get_table_3(your_option, action)
 
+        action = text_collection.yes
+        create_table.get_table_4(your_option, action)
+        create_table.get_carrying_capacity(your_option, action)
+
+        action = text_collection.yes
+        create_table.get_table_5(your_option)
+        create_table.get_structure_turn(your_option, action)
+
+        action = input('Выводим анализ? (да/нет): ')
+        create_table.get_analysis(your_option, action)
+
+        action = input('Выводим диаграммы? (да/нет): ')
+        create_table.get_diagrams(your_option, action)
+
+        action = text_collection.yes
+        create_table.work_4(your_option, action)
+
+    if work_number == 1:
         create_table.get_table_1(your_option)
         create_table.get_table_2(your_option)
         action = input('Выводим таблицу вместе с вычислениями? (да/нет): ')
