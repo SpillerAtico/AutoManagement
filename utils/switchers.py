@@ -163,7 +163,27 @@ def choose_def_value(option, case, ship) -> tuple:
         answer = calculations.find_factor_annual_capacity(option)[0]
         return factor_annual_capacity, answer.get(ship)
 
-    if case == 31:  # Дmin = Gmin * fсрi
-        minimum_income = text_collection.minimum_income
-        answer = calculations.find_minimum_income(option)[0]
-        return minimum_income, answer.get(ship)
+    if case == 31:  # # fтэк = (fср * Qэ – Эссоб – Этоб) / tоб, где Qэ = Qэпр + Qэобр
+        charter_equivalent = text_collection.charter_equivalent
+        answer = calculations.find_charter_equivalent(option)[0]
+        return charter_equivalent, answer.get(ship)
+
+    if case == 32:  # Дар = (365 – Тэ) * fтэк;
+        income_ships = text_collection.income_ships
+        answer = calculations.find_income_ships(option)[0]
+        return income_ships, answer.get(ship)
+
+    if case == 33:  # Эар = (365 – Тэ) * Со
+        expenses_delivery = text_collection.expenses_delivery
+        answer = calculations.find_expenses_delivery(option)[0]
+        return expenses_delivery, answer.get(ship)
+
+    if case == 34:  # Пв = Дпер + Дар – Эпер – Эар
+        gross_profit = text_collection.gross_profit
+        answer = calculations.find_gross_profit(option)[0]
+        return gross_profit, answer.get(ship)
+
+    if case == 35:  # R = Пв / (Эпер + Эар) * 100%
+        profitability = text_collection.profitability
+        answer = calculations.find_profitability(option)[0]
+        return profitability, answer.get(ship)

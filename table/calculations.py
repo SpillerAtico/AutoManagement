@@ -6,12 +6,12 @@ from utils.enums import AttachmentsTable8, AttachmentsTable6, AttachmentsTable2
 def find_share_capital(option: int):
     ships = options.your_ships(option)
 
-    ship_count = options.get_info_ships(option, AttachmentsTable8.ship_count)
+    ship_count = 6
     balance = options.get_info_table_2(option, AttachmentsTable2.balance)
 
-    capital = {ship: int(balance.get(ship)) * int(ship_count.get(ship)) for ship in ships}
+    capital = {ship: int(balance.get(ship)) * ship_count for ship in ships}
     calculate = {
-        ship: f'{int(balance.get(ship))} * {int(ship_count.get(ship))} = {int(balance.get(ship)) * int(ship_count.get(ship))}'
+        ship: f'{int(balance.get(ship))} * {ship_count} = {int(balance.get(ship)) * ship_count}'
         for ship in ships
     }
 
@@ -220,7 +220,7 @@ def find_period_operation(option: int):  # nобi = Тэ/tобi
     ships = options.your_ships(option)
 
     duration_turn = find_duration_turn(option)[0]
-    time = 365 * 3
+    time = 305
 
     period_operation = {ship: round(time / duration_turn.get(ship), 2) for ship in ships}
     calculate = {ship: f'{time} / {duration_turn.get(ship)} = {time / duration_turn.get(ship)}'
@@ -285,7 +285,7 @@ def find_crew_expenses(option: int):
     return crew_expenses, calculate
 
 
-def find_ship_fees(option: int):
+def find_ship_fees(option: int):  # Эсс
     ships = options.your_ships(option)
     fees = options.ship_fees_table_7(option)
 
@@ -296,17 +296,17 @@ def find_ship_fees(option: int):
             for ship in ships}
         return ship_fees, calculate
     elif len(fees.get(ships[0])) == 2:
-        ship_fees = {ship: fees.get(ship)[0] + fees.get(ship)[1] for ship in ships}
+        ship_fees = {ship: round(fees.get(ship)[0] + fees.get(ship)[1], 2) for ship in ships}
         calculate = {ship: f'{fees.get(ship)[0]} + {fees.get(ship)[1]} = {fees.get(ship)[0] + fees.get(ship)[1]}'
                      for ship in ships}
         return ship_fees, calculate
 
 
-def find_fuel_costs(option: int):
+def find_fuel_costs(option: int):  # Этоб
     ships = options.your_ships(option)
     specific_fuel = options.get_info_ships_6(option, AttachmentsTable6.specific_fuel)
 
-    fuel_costs = {ship: round(700 * float(specific_fuel.get(ship)) * 712 * 0.00108, 1) for ship in ships}
+    fuel_costs = {ship: round(700 * float(specific_fuel.get(ship)) * 712 * 0.00108, 2) for ship in ships}
     calculate = {
         ship: f'700 * {float(specific_fuel.get(ship))} * 712 * 0.00108 = {700 * float(specific_fuel.get(ship)) * 712 * 0.00108}'
         for ship in ships}
@@ -588,7 +588,7 @@ def find_capacity_navigation_period(option: int):  # Gi = nоб * (Qэпр + Qэ
     return capacity_navigation_period, calculate
 
 
-def find_expenses_nav_period(option: int):  # Эперi = Sср * Gi долл
+def find_expenses_nav_period(option: int):  # Эпер = Sср * Gi долл
     ships = options.your_ships(option)
 
     cost_cargo_trans = find_cost_cargo_trans(option)[0]  # Sср
@@ -607,7 +607,7 @@ def find_expenses_nav_period(option: int):  # Эперi = Sср * Gi долл
     return expenses_nav_period, calculate
 
 
-def find_revenue_transportation(option: int):  # Дперi = Gi * fсрi
+def find_revenue_transportation(option: int):  # Дпер = Gi * fсрi
     ships = options.your_ships(option)
 
     navigation_period = find_capacity_navigation_period(option)[0]  # Gi = nоб * (Qэпр + Qэобр)
@@ -660,3 +660,120 @@ def find_minimum_income(option: int):  # Дmin = Gmin * fсрi
     }
 
     return minimum_income, calculate
+
+
+def find_charter_equivalent(option: int):  # fтэк = (fср * Qэ – Эссоб – Этоб) / tоб
+    ships = options.your_ships(option)
+
+    rate_load = find_rate_load(option)  # Qэпр & Qэобр
+    freight_rate = find_freight_rate(option)[0]  # fср
+    duration_turn = find_duration_turn(option)[0]  # tоб
+    ship_fees = find_ship_fees(option)[0]  # Эссоб
+    fuel_costs = find_fuel_costs(option)[0]  # Этоб
+
+    charter_equivalent = {
+        ship: round((freight_rate.get(ship)[2] * (
+                float(rate_load[0].get(ship)) + float(rate_load[1].get(ship))) - ship_fees.get(
+            ship) - fuel_costs.get(ship)) / duration_turn.get(ship), 2)
+        for ship in ships
+    }
+
+    calculate = {
+        ship: f'({freight_rate.get(ship)[2]} * ({float(rate_load[0].get(ship))} + {float(rate_load[1].get(ship))}) - {ship_fees.get(ship)} - {fuel_costs.get(ship)}) / {duration_turn.get(ship)} = {(freight_rate.get(ship)[2] * (float(rate_load[0].get(ship)) + float(rate_load[1].get(ship))) - ship_fees.get(ship) - fuel_costs.get(ship)) / duration_turn.get(ship)}'
+        for ship in ships
+    }
+
+    return charter_equivalent, calculate
+
+
+def find_income_ships(option: int):  # Дар = (365 – Тэ) * fтэк;
+    time = 305  # Тэ
+    charter_equivalent = find_charter_equivalent(option)[0]
+    ships = options.your_ships(option)
+
+    income_ships = {
+        ship: round((365 - time) * charter_equivalent.get(ship), 2)
+        for ship in ships
+    }
+
+    calculate = {
+        ship: f'(365 - {time}) * {charter_equivalent.get(ship)} = {(365 - time) * charter_equivalent.get(ship)}'
+        for ship in ships
+    }
+
+    return income_ships, calculate
+
+
+def find_check_charter_equivalent(option: int):  # fтэк > Со
+    ships = options.your_ships(option)
+
+    charter_equivalent = find_charter_equivalent(option)[0]  # fтэк
+    costs = options.get_info_ships_6(option, AttachmentsTable6.cost_price)  # Со
+
+    calculate = {
+        ship: f'{charter_equivalent.get(ship)} > {costs.get(ship)}'
+        for ship in ships
+    }
+
+    return calculate
+
+
+def find_expenses_delivery(option: int):  # Эар = (365 – Тэ) * Со
+    ships = options.your_ships(option)
+    time = 305  # Тэ
+
+    costs = options.get_info_ships_6(option, AttachmentsTable6.cost_price)  # Со
+
+    expenses_delivery = {
+        ship: round((365 - time) * float(costs.get(ship)), 2)
+        for ship in ships
+    }
+
+    calculate = {
+        ship: f'(365 - {time}) * {costs.get(ship)} = {(365 - time) * costs.get(ship)}'
+        for ship in ships
+    }
+
+    return expenses_delivery, calculate
+
+
+def find_gross_profit(option: int):  # Пв = Дпер + Дар – Эпер – Эар.
+    ships = options.your_ships(option)
+
+    revenue_transportation = find_revenue_transportation(option)[0]  # Дпер
+    expenses_nav_period = find_expenses_nav_period(option)[0]  # Эпер
+    income_ships = find_income_ships(option)[0]  # Дар
+    expenses_delivery = find_expenses_delivery(option)[0]  # Эар
+
+    gross_profit = {
+        ship: round(revenue_transportation.get(ship) + income_ships.get(ship) - expenses_nav_period.get(
+            ship) - expenses_delivery.get(ship), 2)
+        for ship in ships
+    }
+
+    calculate = {
+        ship: f'{revenue_transportation.get(ship)} + ({income_ships.get(ship)}) - {expenses_nav_period.get(ship)} - ({expenses_delivery.get(ship)}) = {revenue_transportation.get(ship) + income_ships.get(ship) - expenses_nav_period.get(ship) - expenses_delivery.get(ship)}'
+        for ship in ships
+    }
+
+    return gross_profit, calculate
+
+
+def find_profitability(option: int):  # R = Пв / (Эпер + Эар) * 100 %.
+    ships = options.your_ships(option)
+
+    gross_profit = find_gross_profit(option)[0]  # Пв
+    print(gross_profit)
+    expenses_nav_period = find_expenses_nav_period(option)[0]  # Эпер
+    expenses_delivery = find_expenses_delivery(option)[0]  # Эар
+
+    profitability = {
+        ship: f'{round(gross_profit.get(ship) / (expenses_nav_period.get(ship) + expenses_delivery.get(ship)) * 100, 1)}%'
+        for ship in ships
+    }
+
+    calculate = {
+        ship: f'{gross_profit.get(ship)} / ({expenses_nav_period.get(ship)} + ({expenses_delivery.get(ship)})) * 100% = {gross_profit.get(ship) / (expenses_nav_period.get(ship) + expenses_delivery.get(ship)) * 100}%'
+        for ship in ships
+    }
+    return profitability, calculate

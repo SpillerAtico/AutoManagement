@@ -1,11 +1,11 @@
 import openpyxl
 from typing import List
-from config import attachments, your_option
+from config import attachments_excel, your_option
 from view import text_collection
 from utils.enums import AttachmentsTable8, AttachmentsTable6, AttachmentsTable2
 
-workbook = openpyxl.load_workbook(attachments)
-sheets = openpyxl.load_workbook(attachments).sheetnames
+workbook = openpyxl.load_workbook(attachments_excel)
+sheets = openpyxl.load_workbook(attachments_excel).sheetnames
 
 
 def get_table_options_3(option: int, sheet) -> str:

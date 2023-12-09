@@ -1,7 +1,6 @@
 from view import text_collection
 from settings import options
-from settings.options import workbook, sheets
-from utils.enums import cells_1, AttachmentsTable8, AttachmentsTable2, AttachmentsTable6
+from utils.enums import cells_1, AttachmentsTable2, AttachmentsTable6
 from prettytable import PrettyTable
 from . import calculations
 from utils import switchers
@@ -56,13 +55,13 @@ def get_table_3(option: int, action):
     mydata = text_collection.table_text_3
     pups = PrettyTable(mydata)
 
-    ship_count = options.get_info_ships(option, AttachmentsTable8.ship_count)
+    ship_count = 6
     balance = options.get_info_table_2(option, AttachmentsTable2.balance)
     share_capital = calculations.find_share_capital(option)[0]
     if action == text_collection.no:
         for ship in your_ships:
-            pups.add_row([ship, balance.get(ship), ship_count.get(ship), share_capital.get(ship)])
-            summa = summa + int(balance.get(ship)) * int(ship_count.get(ship))
+            pups.add_row([ship, balance.get(ship), ship_count, share_capital.get(ship)])
+            summa = summa + int(balance.get(ship)) * ship_count
         pups.add_row([' ', ' ', ' ', ' '])
         pups.add_row([text_collection.resulte, ' ', ' ', summa])
 
@@ -70,8 +69,8 @@ def get_table_3(option: int, action):
         print(pups)
     elif action == text_collection.yes:
         for ship in your_ships:
-            pups.add_row([ship, balance.get(ship), ship_count.get(ship), share_capital.get(ship)])
-            summa = summa + int(balance.get(ship)) * int(ship_count.get(ship))
+            pups.add_row([ship, balance.get(ship), ship_count, share_capital.get(ship)])
+            summa = summa + int(balance.get(ship)) * ship_count
 
         pups.add_row([' ', ' ', ' ', ' '])
         pups.add_row([text_collection.resulte, ' ', ' ', summa])
@@ -235,4 +234,3 @@ def work_4(option: int, action):
         calculations_structure_create.calculation_structure_3(option)
     else:
         print(text_collection.only_yes_and_no)
-

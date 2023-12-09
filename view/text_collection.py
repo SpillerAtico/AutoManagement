@@ -57,7 +57,7 @@ holds = "Число трюмов, ед."
 hold_capacity = "Вместимость трюмов, м3"
 container_capacity = "Контейнеровместимость, ед."
 
-table_text_1 = [overall_length, overall_width, side_height, draft_cargo, engine_power, empty_speed, autonomy_swim, crew,
+table_text_1 = [overall_length, overall_width, side_height, draft_cargo, engine_power, empty_speed, autonomy_swim,
                 deadweight, load_capacity, gross_capacity,
                 net_capacity, holds, hold_capacity,
                 container_capacity]
@@ -139,11 +139,11 @@ factor_annual_capacity = "Коэффициент использования го
 minimum_income = "Минимальные доходы (порог рентабельности) Дmin"  # Дmin = Gmin * fсрi
 
 title_work_5_1 = "Определение доходов и расходов от сдачи судов в аренду (тайм-чартер)"
-income_ships = "Доходы от сдачи судов"  # Дарi = (365 – Тэ) . fтэкi  . nсi;
-charter_equivalent = "Тайм-чартерный  эквивалент"  # fтэкi = (fср . Qэi – Эссобi – Этобi)/tобi, долл/сут., где Qэi = Qэпр i +Qэобр i
+charter_equivalent = "Тайм-чартерный  эквивалент"  # fтэк = (fср * Qэ – Эссоб – Этоб) / tоб, где Qэ = Qэпр + Qэобр
+income_ships = "Доходы от сдачи судов"  # Дар = (365 – Тэ) * fтэк
 
 title_work_5_2 = "Определение условий сдачи судов в аренду"
-check_charter_equivalent = "Тайм-чартерный эквивалент должен быть больше суточного содержания судна в аренде, т.е. fтэкi > Соi"
+check_charter_equivalent = "Тайм-чартерный эквивалент должен быть больше суточного содержания судна в аренде, т.е. fтэк > Со"  # fтэк > Со
 result = """
  Вывод: так как выполняется условие,
  что тайм-чартерный эквивалент должен быть больше суточного содержания  судна в аренде,
@@ -151,9 +151,25 @@ result = """
 """
 
 title_work_5_3 = "Определение расходов от сдачи судов в аренду"
-expenses_delivery = "Расходы от сдачи"  # Эар i = (365 – Тэ) * Со i* nсi, долл.
+expenses_delivery = "Расходы от сдачи"  # Эар = (365 – Тэ) * Со, долл.
+
 title_work_5_4 = "Определение валовой прибыли и рентабельности от использования судов в расчете на одно судно"
-gross_profit = "Валовая прибыль"  # Пв = Дпер + Дар – Эпер – Эар.
-profitability = "Определение рентабельности"  # R = Пв / (Эпер + Эар) · 100 %.
+gross_profit = "Валовая прибыль"  # Пв = Дпер + Дар – Эпер – Эар
+profitability = "Определение рентабельности"  # R = Пв / (Эпер + Эар) * 100%
 
 table_economic_performance = "Экономические показатели работы судов"
+
+text_names = ("length_1", 'length_2', 'length_3',
+              'width_1', 'width_2', 'width_3',
+              'height_1', 'height_2', 'height_3',
+              'draft_cargo_1', 'draft_cargo_2', 'draft_cargo_3',
+              'power_1', 'power_2', 'power_3',
+              'speed_1', 'speed_2', 'speed_3',
+              'autonomy_swim_1', 'autonomy_swim_2', 'autonomy_swim_3',
+              'deadweight_1', 'deadweight_2', 'deadweight_3',
+              'load_capacity_1', 'load_capacity_2', 'load_capacity_3',
+              'gross_capacity_1', 'gross_capacity_2', 'gross_capacity_3',
+              'net_capacity_1', 'net_capacity_2', 'net_capacity_3',
+              'holds_1', 'holds_2', 'holds_3',
+              'hold_capacity_1', 'hold_capacity_2', 'hold_capacity_3',
+              'container_capacity_1', 'container_capacity_2', 'container_capacity_3')

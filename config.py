@@ -1,6 +1,7 @@
 from view.text_collection import option, work_number
 
-attachments = "C:/Users/admin/Desktop/спидозные козявки.xlsx"
+attachments_excel = "C:/Users/admin/Desktop/AutoManagement/спидозные козявки.xlsx"
+attachments_word = "C:/Users/admin/Desktop/AutoManagement/management template.docx"
 
 your_option = int(input(option))
-work_number = int(input(work_number))
+work_number = input(work_number)

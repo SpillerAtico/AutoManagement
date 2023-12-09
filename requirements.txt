@@ -1,6 +1,7 @@
 openpyxl==3.1.2
 prettytable==3.9.0
 matplotlib==3.8.2
+docxtpl==0.16.7
 
 
 
