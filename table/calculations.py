@@ -6,7 +6,7 @@ from utils.enums import AttachmentsTable8, AttachmentsTable6, AttachmentsTable2
 def find_share_capital(option: int):
     ships = options.your_ships(option)
 
-    ship_count = 6
+    ship_count = 2
     balance = options.get_info_table_2(option, AttachmentsTable2.balance)
 
     capital = {ship: int(balance.get(ship)) * ship_count for ship in ships}
@@ -184,7 +184,6 @@ def find_duration_stay(option: int) -> dict:  # Продолжительност
 
 def find_flight_time(option: int):  # Время рейса: tкр
     ships = options.your_ships(option)
-
     duration_stay = find_duration_stay(option)
 
     time_cargo = find_times_with_cargo(option)[0]
@@ -205,7 +204,6 @@ def find_flight_time(option: int):  # Время рейса: tкр
 
 def find_duration_turn(option: int):  # Продолжительность оборота, сут. tоб
     ships = options.your_ships(option)
-
     time = find_flight_time(option)[0]
 
     duration_turn = {ship: time.get(ship)[0] + time.get(ship)[1] for ship in ships}

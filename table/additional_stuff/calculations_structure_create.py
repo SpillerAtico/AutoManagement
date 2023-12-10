@@ -13,23 +13,18 @@ def calculation_structure_1(option: int):
     consumptions = calculations.find_consumption(option)[1]
     full_consumption = calculations.find_full_consumption(option)[1]
 
-    print(
-        f'\n\n{text_collection.cost_maintaining_f}\n{cost_maintaining.get(ship_1)[0]}\n{cost_maintaining.get(ship_2)[0]}\n{cost_maintaining.get(ship_3)[0]}\n')
-    print(
-        f'{text_collection.cost_maintaining_r}\n{cost_maintaining.get(ship_1)[1]}\n{cost_maintaining.get(ship_2)[1]}\n{cost_maintaining.get(ship_3)[1]}\n')
-    print(
-        f'{text_collection.crew_expenses_f}\n{crew_expenses.get(ship_1)[0]}\n{crew_expenses.get(ship_2)[0]}\n{crew_expenses.get(ship_3)[0]}\n')
-    print(
-        f'{text_collection.crew_expenses_r}\n{crew_expenses.get(ship_1)[1]}\n{crew_expenses.get(ship_2)[1]}\n{crew_expenses.get(ship_3)[1]}\n')
-    print(f'{text_collection.ship_fees}\n{ship_fees.get(ship_1)}\n{ship_fees.get(ship_2)}\n{ship_fees.get(ship_3)}\n')
-    print(
-        f'{text_collection.fuel_costs}\n{fuel_costs.get(ship_1)}\n{fuel_costs.get(ship_2)}\n{fuel_costs.get(ship_3)}\n')
-    print(
-        f'{text_collection.consumption_f}\n{consumptions.get(ship_1)[0]}\n{consumptions.get(ship_2)[0]}\n{consumptions.get(ship_3)[0]}\n')
-    print(
-        f'{text_collection.consumption_r}\n{consumptions.get(ship_1)[1]}\n{consumptions.get(ship_2)[1]}\n{consumptions.get(ship_3)[1]}\n')
-    print(
-        f'{text_collection.full_consumption}\n{full_consumption.get(ship_1)}\n{full_consumption.get(ship_2)}\n{full_consumption.get(ship_3)}\n')
+    text = f"""\n\n{text_collection.cost_maintaining_f}\n{cost_maintaining.get(ship_1)[0]}\n{cost_maintaining.get(ship_2)[0]}\n{cost_maintaining.get(ship_3)[0]}\n
+{text_collection.cost_maintaining_r}\n{cost_maintaining.get(ship_1)[1]}\n{cost_maintaining.get(ship_2)[1]}\n{cost_maintaining.get(ship_3)[1]}\n
+{text_collection.crew_expenses_f}\n{crew_expenses.get(ship_1)[0]}\n{crew_expenses.get(ship_2)[0]}\n{crew_expenses.get(ship_3)[0]}\n
+{text_collection.crew_expenses_r}\n{crew_expenses.get(ship_1)[1]}\n{crew_expenses.get(ship_2)[1]}\n{crew_expenses.get(ship_3)[1]}\n
+{text_collection.ship_fees}\n{ship_fees.get(ship_1)}\n{ship_fees.get(ship_2)}\n{ship_fees.get(ship_3)}\n
+{text_collection.fuel_costs}\n{fuel_costs.get(ship_1)}\n{fuel_costs.get(ship_2)}\n{fuel_costs.get(ship_3)}\n
+{text_collection.consumption_f}\n{consumptions.get(ship_1)[0]}\n{consumptions.get(ship_2)[0]}\n{consumptions.get(ship_3)[0]}\n
+{text_collection.consumption_r}\n{consumptions.get(ship_1)[1]}\n{consumptions.get(ship_2)[1]}\n{consumptions.get(ship_3)[1]}\n
+{text_collection.full_consumption}\n{full_consumption.get(ship_1)}\n{full_consumption.get(ship_2)}\n{full_consumption.get(ship_3)}\n
+    """
+
+    return text
 
 
 def calculation_structure_2(option: int):
@@ -43,40 +38,27 @@ def calculation_structure_2(option: int):
     income = calculations.find_income(option)[1]  # расчет доходов Дпер.пр Дпер.обр. Дпер
     expenses = calculations.find_expenses(option)[1]  # расчет расходов Эпер.пр Эпер.обр Эпер
 
-    print(f'\n{text_collection.revenue_turn}:')
-    print(f'\n[{ship_1}] {revenue.get(ship_1)}\n[{ship_2}] {revenue.get(ship_2)}\n[{ship_3}] {revenue.get(ship_3)}')
-
-    print(f'\n{text_collection.determination_cost}:')
-    print(
-        f'\n[{ship_1}]\n{cost_cargo_trans.get(ship_1)[0]}\n{cost_cargo_trans.get(ship_1)[1]}\n{cost_cargo_trans.get(ship_1)[2]}')
-    print(
-        f'\n[{ship_2}]\n{cost_cargo_trans.get(ship_2)[0]}\n{cost_cargo_trans.get(ship_2)[1]}\n{cost_cargo_trans.get(ship_2)[2]}')
-    print(
-        f'\n[{ship_3}]\n{cost_cargo_trans.get(ship_3)[0]}\n{cost_cargo_trans.get(ship_3)[1]}\n{cost_cargo_trans.get(ship_3)[2]}')
-
-    print(f'\n{text_collection.freight_rate}:')
-    print(
-        f'\n[{ship_1}]\n{freight_rate.get(ship_1)[0]}\n{freight_rate.get(ship_1)[1]}\n{freight_rate.get(ship_1)[2]}')
-    print(
-        f'\n[{ship_2}]\n{freight_rate.get(ship_2)[0]}\n{freight_rate.get(ship_2)[1]}\n{freight_rate.get(ship_2)[2]}')
-    print(
-        f'\n[{ship_3}]\n{freight_rate.get(ship_3)[0]}\n{freight_rate.get(ship_3)[1]}\n{freight_rate.get(ship_3)[2]}')
-
-    print(f'\n{text_collection.income_years}:')
-    print(
-        f'\n[{ship_1}]\n{income.get(ship_1)[0]}\n{income.get(ship_1)[1]}\n{income.get(ship_1)[2]}')
-    print(
-        f'\n[{ship_2}]\n{income.get(ship_2)[0]}\n{income.get(ship_2)[1]}\n{income.get(ship_2)[2]}')
-    print(
-        f'\n[{ship_3}]\n{income.get(ship_3)[0]}\n{income.get(ship_3)[1]}\n{income.get(ship_3)[2]}')
-
-    print(f'\n{text_collection.expenses_years}:')
-    print(
-        f'\n[{ship_1}]\n{expenses.get(ship_1)[0]}\n{expenses.get(ship_1)[1]}\n{expenses.get(ship_1)[2]}')
-    print(
-        f'\n[{ship_2}]\n{expenses.get(ship_2)[0]}\n{expenses.get(ship_2)[1]}\n{expenses.get(ship_2)[2]}')
-    print(
-        f'\n[{ship_3}]\n{expenses.get(ship_3)[0]}\n{expenses.get(ship_3)[1]}\n{expenses.get(ship_3)[2]}')
+    text = f"""
+\n{text_collection.revenue_turn}:
+\n[{ship_1}] {revenue.get(ship_1)}\n[{ship_2}] {revenue.get(ship_2)}\n[{ship_3}] {revenue.get(ship_3)}
+\n{text_collection.determination_cost}:
+\n[{ship_1}]\n{cost_cargo_trans.get(ship_1)[0]}\n{cost_cargo_trans.get(ship_1)[1]}\n{cost_cargo_trans.get(ship_1)[2]}
+\n[{ship_2}]\n{cost_cargo_trans.get(ship_2)[0]}\n{cost_cargo_trans.get(ship_2)[1]}\n{cost_cargo_trans.get(ship_2)[2]}
+\n[{ship_3}]\n{cost_cargo_trans.get(ship_3)[0]}\n{cost_cargo_trans.get(ship_3)[1]}\n{cost_cargo_trans.get(ship_3)[2]}
+\n{text_collection.freight_rate}:
+\n[{ship_1}]\n{freight_rate.get(ship_1)[0]}\n{freight_rate.get(ship_1)[1]}\n{freight_rate.get(ship_1)[2]}
+\n[{ship_2}]\n{freight_rate.get(ship_2)[0]}\n{freight_rate.get(ship_2)[1]}\n{freight_rate.get(ship_2)[2]}
+\n[{ship_3}]\n{freight_rate.get(ship_3)[0]}\n{freight_rate.get(ship_3)[1]}\n{freight_rate.get(ship_3)[2]}
+\n{text_collection.income_years}:
+\n[{ship_1}]\n{income.get(ship_1)[0]}\n{income.get(ship_1)[1]}\n{income.get(ship_1)[2]}
+\n[{ship_2}]\n{income.get(ship_2)[0]}\n{income.get(ship_2)[1]}\n{income.get(ship_2)[2]}
+\n[{ship_3}]\n{income.get(ship_3)[0]}\n{income.get(ship_3)[1]}\n{income.get(ship_3)[2]}
+\n{text_collection.expenses_years}:
+\n[{ship_1}]\n{expenses.get(ship_1)[0]}\n{expenses.get(ship_1)[1]}\n{expenses.get(ship_1)[2]}
+\n[{ship_2}]\n{expenses.get(ship_2)[0]}\n{expenses.get(ship_2)[1]}\n{expenses.get(ship_2)[2]}
+\n[{ship_3}]\n{expenses.get(ship_3)[0]}\n{expenses.get(ship_3)[1]}\n{expenses.get(ship_3)[2]}
+"""
+    return text
 
 
 def calculation_structure_3(option: int):
@@ -102,23 +84,26 @@ def calculation_structure_3(option: int):
     specifications = (minimum_volume_transportation, operating_costs, independent_expenses, expenses_navigation_period,
                       carrying_capacity_navigation_period, revenue_transportation, factor_annual_capacity,
                       minimum_income)
-
+    text = f''
     for specification in specifications:
-        print(f'\n{specification[1]}: ')
+        text = text + f'\n\n{specification[1]}: '
         for ship in ships:
-            print(f'[{ship}]', f'{specification[0].get(ship)}')
+            text = text + f'\n[{ship}]  {specification[0].get(ship)}'
+    return text
 
 
-def calculation_structure_4(option: int):
+def calculation_structure_4(option: int):  # капитал
     ships = options.your_ships(option)
 
     share_capital = calculations.find_share_capital(option)[1]
-    print()
+    text = f''
     for ship in ships:
-        print(f'[{ship}]', share_capital.get(ship))
+        text = text + f'\n[{ship}]  {share_capital.get(ship)}'
+
+    return text
 
 
-def calculation_structure_5(option: int):
+def calculation_structure_5(option: int): # таблица работа 2
     ships = options.your_ships(option)
 
     specific_capacity = calculations.find_specific_capacity(option)[1]
@@ -131,28 +116,31 @@ def calculation_structure_5(option: int):
 
     specifications = (specific_capacity, rate_load, utilization_factor, operational_speed,
                       times_with_cargo, flight_time, duration_turn)
-
+    text = f''
     for specification in specifications:
-        print()
         if specification is rate_load:
             for ship in ships:
-                print(f'[{ship}]', f'{specification[2].get(ship)}')
-                print(f'[{ship}]', f'{specification[3].get(ship)}')
-
+                text = text + f'\n[{ship}]  {specification[2].get(ship)}'
+                text = text + f'\n[{ship}]  {specification[3].get(ship)}'
+            text = text + '\n '
         elif type(specification.get(ships[0])) is tuple:
             for ship in ships:
-                print(f'[{ship}]', f'{specification.get(ship)[0]}')
-                print(f'[{ship}]', f'{specification.get(ship)[1]}')
-
+                text = text + f'\n[{ship}]  {specification.get(ship)[0]}'
+                text = text + f'\n[{ship}]  {specification.get(ship)[1]}'
+            text = text + '\n '
         else:
             for ship in ships:
-                print(f'[{ship}]', f'{specification.get(ship)}')
+                text = text + f'\n[{ship}]  {specification.get(ship)}'
+            text = text + '\n '
+
+    return text
 
 
 def calculation_structure_6(option: int):
     ships = options.your_ships(option)
     carrying_capacity = calculations.find_carrying_capacity(option)[1]
-
-    print()
+    text = f''
     for ship in ships:
-        print(f'[{ship}]', carrying_capacity.get(ship))
+        text = text + f'\n[{ship}] {carrying_capacity.get(ship)}'
+
+    return text

@@ -160,16 +160,50 @@ profitability = "Определение рентабельности"  # R = П�
 table_economic_performance = "Экономические показатели работы судов"
 
 text_names = ("length_1", 'length_2', 'length_3',
+
               'width_1', 'width_2', 'width_3',
+
               'height_1', 'height_2', 'height_3',
+
               'draft_cargo_1', 'draft_cargo_2', 'draft_cargo_3',
+
               'power_1', 'power_2', 'power_3',
+
               'speed_1', 'speed_2', 'speed_3',
+
               'autonomy_swim_1', 'autonomy_swim_2', 'autonomy_swim_3',
+
               'deadweight_1', 'deadweight_2', 'deadweight_3',
+
               'load_capacity_1', 'load_capacity_2', 'load_capacity_3',
+
               'gross_capacity_1', 'gross_capacity_2', 'gross_capacity_3',
+
               'net_capacity_1', 'net_capacity_2', 'net_capacity_3',
+
               'holds_1', 'holds_2', 'holds_3',
+
               'hold_capacity_1', 'hold_capacity_2', 'hold_capacity_3',
+
               'container_capacity_1', 'container_capacity_2', 'container_capacity_3')
+
+text_names_2 = (
+    'specific_capacity_1', 'specific_capacity_2', 'specific_capacity_3',
+
+    'load_volume_f_1', 'load_volume_f_2', 'load_volume_f_3',
+    'load_volume_r_1', 'load_volume_r_2', 'load_volume_r_3',
+
+    'capacity_factor_f_1', 'capacity_factor_f_2', 'capacity_factor_f_3',
+    'capacity_factor_r_1', 'capacity_factor_r_2', 'capacity_factor_r_3',
+
+    'speed_cargo_f_1', 'speed_cargo_f_2', 'speed_cargo_f_3',
+    'speed_cargo_r_1', 'speed_cargo_r_2', 'speed_cargo_r_3',
+
+    'time_with_cargo_f_1', 'time_with_cargo_f_2', 'time_with_cargo_f_3',
+    'time_with_cargo_r_1', 'time_with_cargo_r_2', 'time_with_cargo_r_3',
+
+    'flight_time_f_1', 'flight_time_f_2', 'flight_time_f_3',
+    'flight_time_r_1', 'flight_time_r_2', 'flight_time_r_3',
+
+    'duration_turnover_1', 'duration_turnover_2', 'duration_turnover_3'
+)

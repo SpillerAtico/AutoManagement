@@ -55,7 +55,7 @@ def get_table_3(option: int, action):
     mydata = text_collection.table_text_3
     pups = PrettyTable(mydata)
 
-    ship_count = 6
+    ship_count = 2
     balance = options.get_info_table_2(option, AttachmentsTable2.balance)
     share_capital = calculations.find_share_capital(option)[0]
     if action == text_collection.no:
