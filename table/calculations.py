@@ -728,7 +728,7 @@ def find_expenses_delivery(option: int):  # Эар = (365 – Тэ) * Со
     }
 
     calculate = {
-        ship: f'(365 - {time}) * {costs.get(ship)} = {(365 - time) * costs.get(ship)}'
+        ship: f'(365 - {time}) * {costs.get(ship)} = {(365 - time) * float(costs.get(ship))}'
         for ship in ships
     }
 
@@ -750,7 +750,7 @@ def find_gross_profit(option: int):  # Пв = Дпер + Дар – Эпер –
     }
 
     calculate = {
-        ship: f'{revenue_transportation.get(ship)} + ({income_ships.get(ship)}) - {expenses_nav_period.get(ship)} - ({expenses_delivery.get(ship)}) = {revenue_transportation.get(ship) + income_ships.get(ship) - expenses_nav_period.get(ship) - expenses_delivery.get(ship)}'
+        ship: f'{revenue_transportation.get(ship)} + {income_ships.get(ship)} - {expenses_nav_period.get(ship)} - {expenses_delivery.get(ship)} = {revenue_transportation.get(ship) + income_ships.get(ship) - expenses_nav_period.get(ship) - expenses_delivery.get(ship)}'
         for ship in ships
     }
 
@@ -761,7 +761,6 @@ def find_profitability(option: int):  # R = Пв / (Эпер + Эар) * 100 %.
     ships = options.your_ships(option)
 
     gross_profit = find_gross_profit(option)[0]  # Пв
-    print(gross_profit)
     expenses_nav_period = find_expenses_nav_period(option)[0]  # Эпер
     expenses_delivery = find_expenses_delivery(option)[0]  # Эар
 
@@ -771,7 +770,7 @@ def find_profitability(option: int):  # R = Пв / (Эпер + Эар) * 100 %.
     }
 
     calculate = {
-        ship: f'{gross_profit.get(ship)} / ({expenses_nav_period.get(ship)} + ({expenses_delivery.get(ship)})) * 100% = {gross_profit.get(ship) / (expenses_nav_period.get(ship) + expenses_delivery.get(ship)) * 100}%'
+        ship: f'{gross_profit.get(ship)} / ({expenses_nav_period.get(ship)} + {expenses_delivery.get(ship)}) * 100% = {gross_profit.get(ship) / (expenses_nav_period.get(ship) + expenses_delivery.get(ship)) * 100}%'
         for ship in ships
     }
     return profitability, calculate

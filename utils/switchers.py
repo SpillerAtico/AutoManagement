@@ -143,7 +143,7 @@ def choose_def_value(option, case, ship) -> tuple:
         answer = calculations.find_independent_expenses(option)[0]
         return independent_expenses, answer.get(ship)
 
-    if case == 27:  # Эперi = Sср * Gi долл
+    if case == 27:  # Эпер = Sср * Gi долл
         expenses_navigation_period = text_collection.expenses_navigation_period
         answer = calculations.find_expenses_nav_period(option)[0]
         return expenses_navigation_period, answer.get(ship)
@@ -153,7 +153,7 @@ def choose_def_value(option, case, ship) -> tuple:
         answer = calculations.find_capacity_navigation_period(option)[0]
         return carrying_capacity_navigation_period, answer.get(ship)
 
-    if case == 29:  # Дперi = Gi * fсрi.
+    if case == 29:  # Дпер = Gi * fсрi.
         revenue_transportation = text_collection.revenue_transportation
         answer = calculations.find_revenue_transportation(option)[0]
         return revenue_transportation, answer.get(ship)

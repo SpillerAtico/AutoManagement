@@ -141,7 +141,7 @@ def get_carrying_capacity(option: int, action):
         print(text_collection.only_yes_and_no)
 
 
-def get_table_5(option: int):
+def get_table_5(option: int):  # Характеристики судов заграничного плавания
     ships = options.your_ships(option)
 
     type_ship = options.get_info_ships_6(option, AttachmentsTable6.type_ship)
@@ -158,7 +158,7 @@ def get_table_5(option: int):
     print(pups)
 
 
-def get_structure_turn(option: int, action):
+def get_structure_turn(option: int, action):  # (доходы?) и расходы за оборот
     ship_1, ship_2, ship_3 = options.your_ships(option)
 
     mydata = [text_collection.specifications] + [ship_1, ship_2, ship_3]
