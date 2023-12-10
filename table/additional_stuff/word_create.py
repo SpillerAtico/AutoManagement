@@ -1,4 +1,3 @@
-from docxtpl import DocxTemplate
 from utils.enums import cells_1, AttachmentsTable2, AttachmentsTable6
 from utils import switchers
 from settings import options
@@ -7,9 +6,7 @@ from table import calculations
 from table.additional_stuff import calculations_structure_create
 
 
-def create_doc(word_document, option: int):
-    doc = DocxTemplate(word_document)  # открываем шаблон
-
+def full_context(option: int):
     ships = create_dict_ships(option)
     table_1 = create_dict_1(option)
     table_2 = create_dict_2(option)
@@ -21,9 +18,7 @@ def create_doc(word_document, option: int):
     calculations = create_dict_calculations(option)
 
     context = ships | table_1 | table_2 | table_3 | table_4 | table_5 | table_6 | calculations
-
-    doc.render(context)
-    doc.save(f"спидозные козявки.docx")
+    return context
 
 
 def create_dict_ships(option: int):

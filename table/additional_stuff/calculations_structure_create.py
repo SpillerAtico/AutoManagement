@@ -145,9 +145,6 @@ def calculation_structure_5(option: int):  # таблица работа 2
     return text
 
 
-print(calculation_structure_5(3))
-
-
 def calculation_structure_6(option: int):  # провозной способности
     ships = options.your_ships(option)
     carrying_capacity = calculations.find_carrying_capacity(option)[1]
