@@ -44,9 +44,9 @@ def find_volume_foreign(option: int):  # Усреднённая валовая �
     workbook.active = workbook[sheets[4]]  # Приложение 5
     sheet = workbook.active
 
-    cargo_cell_f = {str(cell.coordinate): str(cell.value) for content in sheet['A3':'A41'] for cell in content
+    cargo_cell_f = {str(cell.coordinate): str(cell.value) for content in sheet['A3':'A42'] for cell in content
                     if cargo_1 in str(cell.value).lower().strip()}.keys()
-    cargo_cell_r = {str(cell.coordinate): str(cell.value) for content in sheet['A3':'A41'] for cell in content
+    cargo_cell_r = {str(cell.coordinate): str(cell.value) for content in sheet['A3':'A42'] for cell in content
                     if cargo_2 in str(cell.value).lower().strip()}.keys()
 
     volume_f = sheet[list(cargo_cell_f)[0].replace('A', 'B')].value
@@ -64,7 +64,7 @@ def find_specific_capacity(option: int) -> tuple:  # Удельная грузо
     specific_capacity = {ship: round(float(hold_capacity_val.get(ship)) / float(load_capacity_val.get(ship)), 1) for
                          ship in ships}
     calculate = {
-        ship: f'{float(hold_capacity_val.get(ship))} / {hold_capacity_val.get(ship)} = {float(hold_capacity_val.get(ship)) / float(load_capacity_val.get(ship))}'
+        ship: f'{float(hold_capacity_val.get(ship))} / {float(load_capacity_val.get(ship))} = {float(hold_capacity_val.get(ship)) / float(load_capacity_val.get(ship))}'
         for ship in ships}
 
     return specific_capacity, calculate
@@ -128,8 +128,7 @@ def find_utilization_factor(option: int):  # Коэффициент исполь
 def find_operational_speed(option: int):  # Скорость хода с грузом Vе, км/ч
     ships = options.your_ships(option)
 
-    speeds = {ship: speed.split('&') for speed in
-              tuple(options.get_info_ships(option, AttachmentsTable8.speed).values()) for ship in ships}
+    speeds = {ship: options.get_info_ships(option, AttachmentsTable8.speed).get(ship).split('&') for ship in ships}
 
     speed = {ship: (float(speeds.get(ship)[0].strip().replace(',', '.')),
                     float(speeds.get(ship)[1].strip().replace(',', '.')))
@@ -206,7 +205,7 @@ def find_duration_turn(option: int):  # Продолжительность об�
     ships = options.your_ships(option)
     time = find_flight_time(option)[0]
 
-    duration_turn = {ship: time.get(ship)[0] + time.get(ship)[1] for ship in ships}
+    duration_turn = {ship: round(time.get(ship)[0] + time.get(ship)[1], 2) for ship in ships}
     calculate = {
         ship: f'{time.get(ship)[0]} + {time.get(ship)[1]} = {(time.get(ship)[0] + time.get(ship)[1])} суток'
         for ship in ships}
@@ -773,4 +772,5 @@ def find_profitability(option: int):  # R = Пв / (Эпер + Эар) * 100 %.
         ship: f'{gross_profit.get(ship)} / ({expenses_nav_period.get(ship)} + {expenses_delivery.get(ship)}) * 100% = {gross_profit.get(ship) / (expenses_nav_period.get(ship) + expenses_delivery.get(ship)) * 100}%'
         for ship in ships
     }
+
     return profitability, calculate

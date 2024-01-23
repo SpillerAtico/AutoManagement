@@ -1,7 +1,7 @@
 from view import text_collection
 from .additional_stuff import diagramm_create, analysis_create
 from docxtpl import DocxTemplate
-from additional_stuff import word_create
+from table.additional_stuff import word_create
 
 
 def create_doc(word_document, option: int):
